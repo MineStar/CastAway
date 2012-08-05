@@ -18,15 +18,26 @@
 
 package de.minestar.castaway.data;
 
+import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.minestarlibrary.utils.ConsoleUtils;
+
 public class Dungeon {
     private final String author;
     private final String dungeonName;
-    private final int dungeonID;
+    private int dungeonID;
+
+    private final int hash;
 
     public Dungeon(int dungeonID, String dungeonName, String author) {
         this.dungeonID = dungeonID;
         this.dungeonName = dungeonName;
         this.author = author;
+
+        this.hash = generateHash();
+    }
+
+    public Dungeon(String dungeonName, String author) {
+        this(0, dungeonName, author);
     }
 
     public int getDungeonID() {
@@ -39,5 +50,42 @@ public class Dungeon {
 
     public String getAuthor() {
         return author;
+    }
+
+    public void setDungeonID(int id) {
+        if (this.dungeonID == 0)
+            this.dungeonID = id;
+        else
+            ConsoleUtils.printError(CastAwayCore.NAME, "The dungeon " + this.toString() + " has already an database ID!");
+    }
+
+    @Override
+    public String toString() {
+        return "Dungeon = { Name=" + dungeonName + ", Creator=" + author + ", ID=" + dungeonID + " }";
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        if (that == null)
+            return false;
+        if (!(that instanceof Dungeon))
+            return false;
+        if (that == this)
+            return true;
+
+        return this.dungeonID == ((Dungeon) that).dungeonID;
+    }
+
+    @Override
+    public int hashCode() {
+        return hash;
+    }
+
+    private int generateHash() {
+        int tempHash = 17;
+        tempHash *= this.dungeonName.hashCode();
+        tempHash *= this.author.hashCode();
+
+        return (tempHash << 5) - tempHash;
     }
 }
