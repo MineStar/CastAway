@@ -18,6 +18,9 @@
 
 package de.minestar.castaway.core;
 
+import java.io.File;
+
+import de.minestar.castaway.database.DatabaseManager;
 import de.minestar.castaway.manager.BlockManager;
 import de.minestar.castaway.manager.PlayerManager;
 import de.minestar.minestarlibrary.AbstractCore;
@@ -25,6 +28,8 @@ import de.minestar.minestarlibrary.AbstractCore;
 public class CastAwayCore extends AbstractCore {
 
     public static final String NAME = "CastAway";
+
+    public static DatabaseManager databaseManager;
 
     public static BlockManager blockManager;
     public static PlayerManager playerManager;
@@ -35,6 +40,11 @@ public class CastAwayCore extends AbstractCore {
 
     @Override
     protected boolean createManager() {
+
+        databaseManager = new DatabaseManager(NAME, new File(getDataFolder(), "sqlconfig.yml"));
+        if (!databaseManager.hasConnection())
+            return false;
+
         blockManager = new BlockManager();
         playerManager = new PlayerManager();
         return true;
