@@ -45,7 +45,7 @@ public class RegisterListener implements Listener {
             return;
         }
 
-        // is the itemInHand correct?
+        // is the ItemInHand correct?
         if (event.getPlayer().getItemInHand().getType().equals(Material.BONE)) {
             // check permissions?
             if (!UtilPermissions.playerCanUseCommand(event.getPlayer(), "castaway.admin")) {
@@ -86,6 +86,5 @@ public class RegisterListener implements Listener {
                 PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Dungeon 'test' not found!");
             }
         }
-
     }
 }
