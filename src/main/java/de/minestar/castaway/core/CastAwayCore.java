@@ -21,7 +21,7 @@ package de.minestar.castaway.core;
 import java.io.File;
 
 import de.minestar.castaway.database.DatabaseManager;
-import de.minestar.castaway.manager.BlockManager;
+import de.minestar.castaway.manager.GameManager;
 import de.minestar.castaway.manager.PlayerManager;
 import de.minestar.minestarlibrary.AbstractCore;
 
@@ -31,7 +31,7 @@ public class CastAwayCore extends AbstractCore {
 
     public static DatabaseManager databaseManager;
 
-    public static BlockManager blockManager;
+    public static GameManager gameManager;
     public static PlayerManager playerManager;
 
     public CastAwayCore() {
@@ -45,15 +45,17 @@ public class CastAwayCore extends AbstractCore {
         if (!databaseManager.hasConnection())
             return false;
 
-        blockManager = new BlockManager();
+        gameManager = new GameManager();
         playerManager = new PlayerManager();
+
+        gameManager.init();
+
         return true;
     }
 
     @Override
     protected boolean commonDisable() {
         databaseManager.closeConnection();
-
-        return databaseManager.hasConnection();
+        return !databaseManager.hasConnection();
     }
 }

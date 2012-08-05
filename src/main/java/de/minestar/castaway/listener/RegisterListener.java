@@ -50,6 +50,10 @@ public class RegisterListener {
             Player player = event.getPlayer();
             boolean isLeftClick = (event.getAction() == Action.LEFT_CLICK_BLOCK);
             if (player.isSneaking()) {
+                if (isLeftClick) {
+                    // AbstractBlock actionBlock = new DungeonStartBlock(
+                    // CastAwayCore.databaseManager.addActionBlock(actionBlock);
+                }
             }
         }
 

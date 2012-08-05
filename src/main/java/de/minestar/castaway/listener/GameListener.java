@@ -120,7 +120,7 @@ public class GameListener {
         this.vector.update(event.getClickedBlock());
 
         // is the block registered?
-        AbstractBlock block = CastAwayCore.blockManager.getBlock(vector);
+        AbstractBlock block = CastAwayCore.gameManager.getBlock(vector);
         if (block == null) {
             return;
         }
