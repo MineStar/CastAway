@@ -54,6 +54,10 @@ public class RegisterListener implements Listener {
                 return;
             }
 
+            event.setCancelled(true);
+            event.setUseInteractedBlock(Event.Result.DENY);
+            event.setUseItemInHand(Event.Result.DENY);
+
             Player player = event.getPlayer();
             boolean isLeftClick = (event.getAction() == Action.LEFT_CLICK_BLOCK);
             if (player.isSneaking()) {
@@ -68,9 +72,6 @@ public class RegisterListener implements Listener {
                         } else {
                             PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Error creating block in database!");
                         }
-                        event.setCancelled(true);
-                        event.setUseInteractedBlock(Event.Result.DENY);
-                        event.setUseItemInHand(Event.Result.DENY);
                     } else if (!isLeftClick && event.getClickedBlock().getType().equals(Material.STONE_BUTTON)) {
                         AbstractBlock actionBlock = new DungeonEndBlock(new BlockVector(event.getClickedBlock()), dungeon);
                         if (CastAwayCore.databaseManager.addActionBlock(actionBlock)) {
@@ -79,11 +80,10 @@ public class RegisterListener implements Listener {
                         } else {
                             PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Error creating block in database!");
                         }
-                        event.setCancelled(true);
-                        event.setUseInteractedBlock(Event.Result.DENY);
-                        event.setUseItemInHand(Event.Result.DENY);
                     }
                 }
+            } else {
+                PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Dungeon 'test' not found!");
             }
         }
 
