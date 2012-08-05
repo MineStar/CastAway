@@ -45,6 +45,12 @@ public class EnterBlock extends AbstractBlock {
         // update the player & the data
         data.updateDungeon(this.dungeon);
 
+        // regain health
+        player.setHealth(20);
+
+        // regain food
+        player.setFoodLevel(20);
+
         // send info
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
         PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + dungeon.getDungeonName() + "'.");

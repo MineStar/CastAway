@@ -21,8 +21,13 @@ package de.minestar.castaway.listener;
 import java.util.HashSet;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -35,6 +40,7 @@ public class GameListener {
     private BlockVector vector;
     private static HashSet<Action> acceptedActions;
     private static HashSet<String> acceptedCommands;
+    private static HashSet<RegainReason> blockedRegainReasons;
 
     static {
         acceptedActions = new HashSet<Action>();
@@ -47,6 +53,11 @@ public class GameListener {
         acceptedCommands.add("/message");
         acceptedCommands.add("/m");
         acceptedCommands.add("/r");
+
+        blockedRegainReasons = new HashSet<RegainReason>();
+        blockedRegainReasons.add(RegainReason.REGEN);
+        blockedRegainReasons.add(RegainReason.MAGIC);
+        blockedRegainReasons.add(RegainReason.MAGIC_REGEN);
     }
 
     public GameListener() {
@@ -130,4 +141,32 @@ public class GameListener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        // only handle players
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player player = (Player) event.getEntity();
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onRegainHealth(EntityRegainHealthEvent event) {
+        // only handle players
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player player = (Player) event.getEntity();
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon()) {
+            if (blockedRegainReasons.contains(event.getRegainReason())) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
 }
