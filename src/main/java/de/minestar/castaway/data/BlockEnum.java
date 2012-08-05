@@ -30,7 +30,7 @@ public enum BlockEnum {
 
     DUNGEON_END(1, DungeonEndBlock.class),
 
-    SPECIAL_HEALTH_FULL(0, FullHealthBlock.class);
+    SPECIAL_HEALTH_FULL(2, FullHealthBlock.class);
 
     private final int ID;
     private final Class<? extends AbstractBlock> clazz;
