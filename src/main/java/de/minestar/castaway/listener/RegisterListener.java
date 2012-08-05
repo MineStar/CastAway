@@ -81,9 +81,9 @@ public class RegisterListener implements Listener {
                             PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Error creating block in database!");
                         }
                     }
+                } else {
+                    PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Dungeon 'test' not found!");
                 }
-            } else {
-                PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Dungeon 'test' not found!");
             }
         }
     }
