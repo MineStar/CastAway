@@ -34,10 +34,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import de.minestar.castaway.blocks.AbstractBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.BlockVector;
+import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class GameListener {
 
+    private PlayerData playerData;
     private BlockVector vector;
     private static HashSet<Action> acceptedActions;
     private static HashSet<String> acceptedCommands;
@@ -81,9 +83,11 @@ public class GameListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        // is the player in DungeonMode
-        if (!CastAwayCore.playerManager.isInDungeon(event.getPlayer()))
+        // Player must be in DungeonMode
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+        if (!this.playerData.isInDungeon()) {
             return;
+        }
 
         // is the command accepted
         if (!acceptedCommands.contains(this.getCommand(event.getMessage()))) {
@@ -103,9 +107,11 @@ public class GameListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        // player must be in DungeonMode
-        if (!CastAwayCore.playerManager.isInDungeon(event.getPlayer()))
+        // Player must be in DungeonMode
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+        if (!this.playerData.isInDungeon()) {
             return;
+        }
 
         // do we have a valid action?
         if (!acceptedActions.contains(event.getAction()))
@@ -128,19 +134,30 @@ public class GameListener {
         switch (action) {
             case LEFT_CLICK_BLOCK : {
                 // handle left-click on a block
+                if (!block.isHandleLeftClick()) {
+                    break;
+                }
+                block.execute(event.getPlayer(), this.playerData);
                 break;
             }
             case RIGHT_CLICK_BLOCK : {
                 // handle right-click on a block
+                if (!block.isHandleRightClick()) {
+                    break;
+                }
+                block.execute(event.getPlayer(), this.playerData);
                 break;
             }
             case PHYSICAL : {
                 // handle physical action - we need a stoneplate
+                if (!block.isHandlePhysical()) {
+                    break;
+                }
                 if (!event.getClickedBlock().getType().equals(Material.STONE_PLATE))
                     break;
 
                 // if we have a registered block -> handle the action
-
+                block.execute(event.getPlayer(), this.playerData);
                 break;
             }
             default : {

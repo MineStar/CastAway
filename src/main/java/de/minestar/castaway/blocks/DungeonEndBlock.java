@@ -27,36 +27,30 @@ import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class EnterBlock extends AbstractBlock {
+public class DungeonEndBlock extends AbstractBlock {
 
-    public EnterBlock(BlockVector vector, Dungeon dungeon) {
+    public DungeonEndBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
-        this.setHandlePhysical();
+        this.setHandleLeftClick();
+        this.setHandleRightClick();
     }
 
     @Override
     public boolean execute(Player player, PlayerData data) {
-        // Player must be in normal mode
-        if (data.isInDungeon()) {
-            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
-            PlayerUtils.sendInfo(player, "Gib /respawn ein um dem Grauen zu entkommen.");
+        // Player must be in a dungeon
+        if (!data.isInDungeon()) {
+            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
+            PlayerUtils.sendInfo(player, "Wende dich an einen Admin falls du es eigentlich bist.");
             return true;
         }
 
-        // update the player & the data
-        data.updateDungeon(this.dungeon);
-
-        // regain health
-        player.setHealth(20);
-
-        // regain food
-        player.setFoodLevel(20);
-
         // send info
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + dungeon.getDungeonName() + "'.");
-        PlayerUtils.sendInfo(player, "Ersteller: " + dungeon.getAuthor());
+        PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + data.getDungeon().getDungeonName() + "' erfolgreich beendet!");
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+
+        // update the player & the data
+        data.quitDungeon();
         return false;
     }
 }

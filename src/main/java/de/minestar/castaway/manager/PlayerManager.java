@@ -28,6 +28,10 @@ import de.minestar.castaway.data.PlayerData;
 public class PlayerManager {
     private HashMap<String, PlayerData> playerMap = new HashMap<String, PlayerData>();
 
+    public PlayerData getPlayerData(Player player) {
+        return this.getPlayerData(player.getName());
+    }
+
     public PlayerData getPlayerData(String playerName) {
         PlayerData data = this.playerMap.get(playerName);
         if (data == null) {
