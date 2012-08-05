@@ -31,15 +31,16 @@ public class FullHealthBlock extends AbstractBlock {
 
     public FullHealthBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
+        this.setHandlePhysical();
     }
 
     @Override
-    public void execute(Player player, PlayerData data) {
+    public boolean execute(Player player, PlayerData data) {
         // Player must be in a dungeon
         if (!data.isInDungeon()) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
             PlayerUtils.sendInfo(player, "Wende dich an einen Admin falls du es eigentlich bist.");
-            return;
+            return true;
         }
 
         // update the players health
@@ -49,5 +50,6 @@ public class FullHealthBlock extends AbstractBlock {
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
         PlayerUtils.sendInfo(player, "Du bist jetzt wieder fit!");
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+        return false;
     }
 }

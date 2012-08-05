@@ -16,27 +16,23 @@
  * along with CastAway.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.castaway.core;
+package de.minestar.castaway.manager;
 
-import de.minestar.castaway.manager.BlockManager;
-import de.minestar.castaway.manager.PlayerManager;
-import de.minestar.minestarlibrary.AbstractCore;
+import java.util.HashMap;
 
-public class CastAwayCore extends AbstractCore {
+import de.minestar.castaway.blocks.AbstractBlock;
+import de.minestar.castaway.data.BlockVector;
 
-    public static final String NAME = "CastAway";
+public class BlockManager {
+    private HashMap<BlockVector, AbstractBlock> blockMap;
 
-    public static BlockManager blockManager;
-    public static PlayerManager playerManager;
-
-    public CastAwayCore() {
-        super(NAME);
+    public AbstractBlock getBlock(BlockVector vector) {
+        return this.blockMap.get(vector);
     }
 
-    @Override
-    protected boolean createManager() {
-        blockManager = new BlockManager();
-        playerManager = new PlayerManager();
-        return true;
+    public void addBlock(BlockVector vector, AbstractBlock block) {
+        if (this.getBlock(vector) != null) {
+            this.blockMap.put(vector.clone(), block);
+        }
     }
 }

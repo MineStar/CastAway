@@ -31,15 +31,16 @@ public class EnterBlock extends AbstractBlock {
 
     public EnterBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
+        this.setHandlePhysical();
     }
 
     @Override
-    public void execute(Player player, PlayerData data) {
+    public boolean execute(Player player, PlayerData data) {
         // Player must be in normal mode
         if (data.isInDungeon()) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
             PlayerUtils.sendInfo(player, "Gib /respawn ein um dem Grauen zu entkommen.");
-            return;
+            return true;
         }
 
         // update the player & the data
@@ -56,5 +57,6 @@ public class EnterBlock extends AbstractBlock {
         PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + dungeon.getDungeonName() + "'.");
         PlayerUtils.sendInfo(player, "Ersteller: " + dungeon.getAuthor());
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+        return false;
     }
 }

@@ -29,12 +29,24 @@ public abstract class AbstractBlock {
     protected final Dungeon dungeon;
     protected final BlockVector vector;
 
+    private boolean handleLeftClick = false;
+    private boolean handleRightClick = false;
+    private boolean handlePhysical = false;
+
     public AbstractBlock(BlockVector vector, Dungeon dungeon) {
         this.vector = vector;
         this.dungeon = dungeon;
     }
 
-    public abstract void execute(Player player, PlayerData data);
+    /**
+     * Execute-method. This is called when a block should be executed.
+     * 
+     * @param player
+     * @param data
+     * @return <b>true</b> if the event should be cancelled, otherwise
+     *         <b>false</b>
+     */
+    public abstract boolean execute(Player player, PlayerData data);
 
     public Dungeon getDungeon() {
         return dungeon;
@@ -42,5 +54,50 @@ public abstract class AbstractBlock {
 
     public BlockVector getVector() {
         return vector;
+    }
+
+    /**
+     * @return the handleLeftClick
+     */
+    public boolean isHandleLeftClick() {
+        return handleLeftClick;
+    }
+
+    /**
+     * @param handleLeftClick
+     *            the handleLeftClick to set
+     */
+    public void setHandleLeftClick() {
+        this.handleLeftClick = true;
+    }
+
+    /**
+     * @return the handleRightClick
+     */
+    public boolean isHandleRightClick() {
+        return handleRightClick;
+    }
+
+    /**
+     * @param handleRightClick
+     *            the handleRightClick to set
+     */
+    public void setHandleRightClick() {
+        this.handleRightClick = true;
+    }
+
+    /**
+     * @return the handlePhysical
+     */
+    public boolean isHandlePhysical() {
+        return handlePhysical;
+    }
+
+    /**
+     * @param handlePhysical
+     *            the handlePhysical to set
+     */
+    public void setHandlePhysical() {
+        this.handlePhysical = true;
     }
 }

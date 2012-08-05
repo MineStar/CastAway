@@ -31,6 +31,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import de.minestar.castaway.blocks.AbstractBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -113,8 +114,16 @@ public class GameListener {
         // update BlockVector
         this.vector.update(event.getClickedBlock());
 
+        // is the block registered?
+        AbstractBlock block = CastAwayCore.blockManager.getBlock(vector);
+        if (block == null) {
+            return;
+        }
+
         // handle action
         final Action action = event.getAction();
+
+        boolean cancelEvent = false;
 
         switch (action) {
             case LEFT_CLICK_BLOCK : {
@@ -138,6 +147,10 @@ public class GameListener {
                 // do nothing :{
                 break;
             }
+        }
+
+        if (cancelEvent) {
+            event.setCancelled(true);
         }
     }
 
