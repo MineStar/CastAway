@@ -27,28 +27,27 @@ import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class EnterBlock extends AbstractBlock {
+public class FullHealthBlock extends AbstractBlock {
 
-    public EnterBlock(BlockVector vector, Dungeon dungeon) {
+    public FullHealthBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
     }
 
     @Override
     public void execute(Player player, PlayerData data) {
-        // Player must be in normal mode
-        if (data.isInDungeon()) {
-            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
-            PlayerUtils.sendInfo(player, "Gib /respawn ein um dem Grauen zu entkommen.");
+        // Player must be in a dungeon
+        if (!data.isInDungeon()) {
+            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
+            PlayerUtils.sendInfo(player, "Wende dich an einen Admin falls du es eigentlich bist.");
             return;
         }
 
-        // update the player & the data
-        data.updateDungeon(this.dungeon);
+        // update the players health
+        player.setHealth(20);
 
         // send info
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + dungeon.getDungeonName() + "'.");
-        PlayerUtils.sendInfo(player, "Ersteller: " + dungeon.getAuthor());
+        PlayerUtils.sendInfo(player, "Du bist jetzt wieder fit!");
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
     }
 }
