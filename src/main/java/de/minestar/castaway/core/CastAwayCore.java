@@ -49,4 +49,11 @@ public class CastAwayCore extends AbstractCore {
         playerManager = new PlayerManager();
         return true;
     }
+
+    @Override
+    protected boolean commonDisable() {
+        databaseManager.closeConnection();
+
+        return databaseManager.hasConnection();
+    }
 }
