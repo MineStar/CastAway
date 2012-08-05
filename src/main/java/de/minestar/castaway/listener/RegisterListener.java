@@ -61,15 +61,24 @@ public class RegisterListener implements Listener {
                 if (dungeon != null) {
                     if (isLeftClick) {
                         AbstractBlock actionBlock = new DungeonStartBlock(new BlockVector(event.getClickedBlock()), dungeon);
-                        CastAwayCore.databaseManager.addActionBlock(actionBlock);
-                        PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "Start block added for '" + dungeon.getDungeonName() + "'.");
+                        if (CastAwayCore.databaseManager.addActionBlock(actionBlock)) {
+                            CastAwayCore.databaseManager.addActionBlock(actionBlock);
+                            CastAwayCore.gameManager.addBlock(actionBlock.getVector(), actionBlock);
+                            PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "Start block added for '" + dungeon.getDungeonName() + "'.");
+                        } else {
+                            PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Error creating block in database!");
+                        }
                         event.setCancelled(true);
                         event.setUseInteractedBlock(Event.Result.DENY);
                         event.setUseItemInHand(Event.Result.DENY);
                     } else {
                         AbstractBlock actionBlock = new DungeonEndBlock(new BlockVector(event.getClickedBlock()), dungeon);
-                        CastAwayCore.databaseManager.addActionBlock(actionBlock);
-                        PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "End block added for '" + dungeon.getDungeonName() + "'.");
+                        if (CastAwayCore.databaseManager.addActionBlock(actionBlock)) {
+                            CastAwayCore.gameManager.addBlock(actionBlock.getVector(), actionBlock);
+                            PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "End block added for '" + dungeon.getDungeonName() + "'.");
+                        } else {
+                            PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Error creating block in database!");
+                        }
                         event.setCancelled(true);
                         event.setUseInteractedBlock(Event.Result.DENY);
                         event.setUseItemInHand(Event.Result.DENY);
