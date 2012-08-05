@@ -128,16 +128,14 @@ public class GameListener {
 
         // handle action
         final Action action = event.getAction();
-
         boolean cancelEvent = false;
-
         switch (action) {
             case LEFT_CLICK_BLOCK : {
                 // handle left-click on a block
                 if (!block.isHandleLeftClick()) {
                     break;
                 }
-                block.execute(event.getPlayer(), this.playerData);
+                cancelEvent = block.execute(event.getPlayer(), this.playerData);
                 break;
             }
             case RIGHT_CLICK_BLOCK : {
@@ -145,7 +143,7 @@ public class GameListener {
                 if (!block.isHandleRightClick()) {
                     break;
                 }
-                block.execute(event.getPlayer(), this.playerData);
+                cancelEvent = block.execute(event.getPlayer(), this.playerData);
                 break;
             }
             case PHYSICAL : {
@@ -153,11 +151,12 @@ public class GameListener {
                 if (!block.isHandlePhysical()) {
                     break;
                 }
-                if (!event.getClickedBlock().getType().equals(Material.STONE_PLATE))
+                if (!event.getClickedBlock().getType().equals(Material.STONE_PLATE)) {
                     break;
+                }
 
                 // if we have a registered block -> handle the action
-                block.execute(event.getPlayer(), this.playerData);
+                cancelEvent = block.execute(event.getPlayer(), this.playerData);
                 break;
             }
             default : {
@@ -166,6 +165,7 @@ public class GameListener {
             }
         }
 
+        // cancel the event, if the block wishes it
         if (cancelEvent) {
             event.setCancelled(true);
         }
