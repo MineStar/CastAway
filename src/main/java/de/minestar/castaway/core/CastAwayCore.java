@@ -18,14 +18,22 @@
 
 package de.minestar.castaway.core;
 
+import de.minestar.castaway.manager.PlayerManager;
 import de.minestar.minestarlibrary.AbstractCore;
 
-public class CastaAwayCore extends AbstractCore {
+public class CastAwayCore extends AbstractCore {
 
     public static final String NAME = "CastAway";
 
-    public CastaAwayCore() {
+    public static PlayerManager playerManager;
+
+    public CastAwayCore() {
         super(NAME);
     }
 
+    @Override
+    protected boolean createManager() {
+        playerManager = new PlayerManager();
+        return true;
+    }
 }
