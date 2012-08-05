@@ -59,7 +59,7 @@ public class RegisterListener implements Listener {
             if (player.isSneaking()) {
                 Dungeon dungeon = CastAwayCore.gameManager.getDungeonByName("test");
                 if (dungeon != null) {
-                    if (isLeftClick) {
+                    if (isLeftClick && event.getClickedBlock().getType().equals(Material.STONE_PLATE)) {
                         AbstractBlock actionBlock = new DungeonStartBlock(new BlockVector(event.getClickedBlock()), dungeon);
                         if (CastAwayCore.databaseManager.addActionBlock(actionBlock)) {
                             CastAwayCore.databaseManager.addActionBlock(actionBlock);
@@ -71,7 +71,7 @@ public class RegisterListener implements Listener {
                         event.setCancelled(true);
                         event.setUseInteractedBlock(Event.Result.DENY);
                         event.setUseItemInHand(Event.Result.DENY);
-                    } else {
+                    } else if (!isLeftClick && event.getClickedBlock().getType().equals(Material.STONE_BUTTON)) {
                         AbstractBlock actionBlock = new DungeonEndBlock(new BlockVector(event.getClickedBlock()), dungeon);
                         if (CastAwayCore.databaseManager.addActionBlock(actionBlock)) {
                             CastAwayCore.gameManager.addBlock(actionBlock.getVector(), actionBlock);
