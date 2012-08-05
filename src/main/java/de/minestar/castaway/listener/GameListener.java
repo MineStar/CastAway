@@ -29,6 +29,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -182,6 +183,7 @@ public class GameListener implements Listener {
             event.setCancelled(true);
         }
     }
+
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         // only handle players
@@ -208,6 +210,14 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        this.playerData = CastAwayCore.playerManager.getPlayerData(((Player) event.getEntity()).getName());
+        if (this.playerData.isInDungeon()) {
+            this.playerData.quitDungeon();
         }
     }
 }
