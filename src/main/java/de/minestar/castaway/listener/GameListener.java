@@ -62,6 +62,7 @@ public class GameListener implements Listener {
         acceptedCommands.add("/r");
 
         blockedRegainReasons = new HashSet<RegainReason>();
+        blockedRegainReasons.add(RegainReason.SATIATED);
         blockedRegainReasons.add(RegainReason.REGEN);
         blockedRegainReasons.add(RegainReason.MAGIC);
         blockedRegainReasons.add(RegainReason.MAGIC_REGEN);
