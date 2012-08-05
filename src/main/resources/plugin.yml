@@ -1,0 +1,3 @@
+name: CastAway
+main: de.minestar.castaway.core.CastAwayCore
+version: ${pom.version}
