@@ -25,14 +25,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 
 import de.minestar.castaway.blocks.AbstractBlock;
-import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.BlockEnum;
 import de.minestar.castaway.data.BlockVector;
@@ -140,9 +137,9 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
     private PreparedStatement addActionBlock;
 
-    public List<AbstractBlock> loadActionBlocks(Map<Integer, Dungeon> dungeonMap) {
+    public Map<BlockVector, AbstractBlock> loadActionBlocks(Map<Integer, Dungeon> dungeonMap) {
 
-        List<AbstractBlock> actionBlocks = new LinkedList<AbstractBlock>();
+        Map<BlockVector, AbstractBlock> actionBlocksMap = new HashMap<BlockVector, AbstractBlock>();
 
         try {
             Statement stat = dbConnection.getConnection().createStatement();
@@ -189,15 +186,15 @@ public class DatabaseManager extends AbstractMySQLHandler {
                 constructor = clazz.getDeclaredConstructor(BlockVector.class, Dungeon.class);
                 AbstractBlock block = (AbstractBlock) constructor.newInstance(bVector, dungeonMap.get(dungeonID));
 
-                actionBlocks.add(block);
+                actionBlocksMap.put(bVector, block);
             }
 
         } catch (Exception e) {
             ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't load action blocks from database!");
-            actionBlocks.clear();
+            actionBlocksMap.clear();
         }
 
-        return actionBlocks;
+        return actionBlocksMap;
     }
 
     public boolean addActionBlock(AbstractBlock actionBlock) {
