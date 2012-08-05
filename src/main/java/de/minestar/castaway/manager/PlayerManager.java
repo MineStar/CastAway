@@ -1,8 +1,28 @@
+/*
+ * Copyright (C) 2012 MineStar.de 
+ * 
+ * This file is part of CastAway.
+ * 
+ * CastAway is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ * 
+ * CastAway is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CastAway.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package de.minestar.castaway.manager;
+
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
+import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
 
 public class PlayerManager {
@@ -29,24 +49,16 @@ public class PlayerManager {
         return this.isInDungeon(player.getName());
     }
 
-    public int getDungeonID(String playerName) {
-        return this.getPlayerData(playerName).getDungeonID();
+    public Dungeon getDungeon(String playerName) {
+        return this.getPlayerData(playerName).getDungeon();
     }
 
-    public int getDungeonID(Player player) {
-        return this.getDungeonID(player.getName());
-    }
-
-    public String getDungeonName(String playerName) {
-        return this.getPlayerData(playerName).getPlayerName();
-    }
-
-    public String getDungeonName(Player player) {
-        return this.getDungeonName(player.getName());
+    public Dungeon getDungeon(Player player) {
+        return this.getDungeon(player.getName());
     }
 
     public void onDeath(String playerName) {
-        this.getPlayerData(playerName).onDeath();
+        this.getPlayerData(playerName).quitDungeon();
     }
 
     public void onDeath(Player player) {
