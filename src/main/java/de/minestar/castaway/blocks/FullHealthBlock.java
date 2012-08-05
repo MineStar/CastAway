@@ -22,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.castaway.data.BlockEnum;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
@@ -31,6 +32,7 @@ public class FullHealthBlock extends AbstractBlock {
 
     public FullHealthBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
+        this.setBlockType(BlockEnum.SPECIAL_HEALTH_FULL);
         this.setHandlePhysical();
     }
 

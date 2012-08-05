@@ -20,6 +20,7 @@ package de.minestar.castaway.blocks;
 
 import org.bukkit.entity.Player;
 
+import de.minestar.castaway.data.BlockEnum;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
@@ -32,6 +33,8 @@ public abstract class AbstractBlock {
     private boolean handleLeftClick = false;
     private boolean handleRightClick = false;
     private boolean handlePhysical = false;
+    private boolean executeIfNotInDungeon = false;
+    private BlockEnum blockType = BlockEnum.UNKNOWN;
 
     public AbstractBlock(BlockVector vector, Dungeon dungeon) {
         this.vector = vector;
@@ -67,7 +70,7 @@ public abstract class AbstractBlock {
      * @param handleLeftClick
      *            the handleLeftClick to set
      */
-    public void setHandleLeftClick() {
+    protected void setHandleLeftClick() {
         this.handleLeftClick = true;
     }
 
@@ -82,7 +85,7 @@ public abstract class AbstractBlock {
      * @param handleRightClick
      *            the handleRightClick to set
      */
-    public void setHandleRightClick() {
+    protected void setHandleRightClick() {
         this.handleRightClick = true;
     }
 
@@ -97,7 +100,37 @@ public abstract class AbstractBlock {
      * @param handlePhysical
      *            the handlePhysical to set
      */
-    public void setHandlePhysical() {
+    protected void setHandlePhysical() {
         this.handlePhysical = true;
+    }
+
+    /**
+     * @return the executeIfNotInDungeon
+     */
+    public boolean isExecuteIfNotInDungeon() {
+        return executeIfNotInDungeon;
+    }
+
+    /**
+     * @param executeIfNotInDungeon
+     *            the executeIfNotInDungeon to set
+     */
+    protected void setExecuteIfNotInDungeon() {
+        this.executeIfNotInDungeon = true;
+    }
+
+    /**
+     * @return the blockType
+     */
+    public BlockEnum getBlockType() {
+        return blockType;
+    }
+
+    /**
+     * @param blockType
+     *            the blockType to set
+     */
+    protected void setBlockType(BlockEnum blockType) {
+        this.blockType = blockType;
     }
 }

@@ -31,6 +31,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.bukkit.gemo.utils.UtilPermissions;
+
 import de.minestar.castaway.blocks.AbstractBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.BlockVector;
@@ -107,11 +109,8 @@ public class GameListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        // Player must be in DungeonMode
+        // get PlayerData
         this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
-        if (!this.playerData.isInDungeon()) {
-            return;
-        }
 
         // do we have a valid action?
         if (!acceptedActions.contains(event.getAction()))
@@ -123,6 +122,18 @@ public class GameListener {
         // is the block registered?
         AbstractBlock block = CastAwayCore.blockManager.getBlock(vector);
         if (block == null) {
+            return;
+        }
+
+        // Player must be in DungeonMode, if the block wishes it
+        if (!block.isExecuteIfNotInDungeon() && !this.playerData.isInDungeon()) {
+            return;
+        }
+
+        // does the player have permissions to use dungeons?
+        if (!UtilPermissions.playerCanUseCommand(event.getPlayer(), "castaway.dungeons.use")) {
+            PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Du darfst Dungeons nicht benutzen!");
+            event.setCancelled(true);
             return;
         }
 
@@ -170,7 +181,6 @@ public class GameListener {
             event.setCancelled(true);
         }
     }
-
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         // only handle players

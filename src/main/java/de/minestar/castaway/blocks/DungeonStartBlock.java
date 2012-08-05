@@ -22,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.castaway.data.BlockEnum;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
@@ -31,7 +32,9 @@ public class DungeonStartBlock extends AbstractBlock {
 
     public DungeonStartBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
+        this.setBlockType(BlockEnum.DUNGEON_START);
         this.setHandlePhysical();
+        this.setExecuteIfNotInDungeon();
     }
 
     @Override
