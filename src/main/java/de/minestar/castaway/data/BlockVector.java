@@ -20,6 +20,7 @@ package de.minestar.castaway.data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 public class BlockVector implements Comparable<BlockVector> {
@@ -55,6 +56,16 @@ public class BlockVector implements Comparable<BlockVector> {
     }
 
     /**
+     * Constructor
+     * 
+     * @param the
+     *            block
+     */
+    public BlockVector(Block block) {
+        this(block.getLocation());
+    }
+
+    /**
      * Update the BlockVector
      * 
      * @param the
@@ -83,6 +94,15 @@ public class BlockVector implements Comparable<BlockVector> {
     public void update(Location location) {
         this.update(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.location = location;
+    }
+
+    /**
+     * Update the BlockVector
+     * 
+     * @param block
+     */
+    public void update(Block block) {
+        this.update(block.getLocation());
     }
 
     /**
