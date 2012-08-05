@@ -24,20 +24,22 @@ import de.minestar.castaway.blocks.DungeonStartBlock;
 import de.minestar.castaway.blocks.FullHealthBlock;
 
 public enum BlockEnum {
-    UNKNOWN(-1, null),
+    UNKNOWN(-1, null, null),
 
-    DUNGEON_START(0, DungeonStartBlock.class),
+    DUNGEON_START(0, DungeonStartBlock.class, "START"),
 
-    DUNGEON_END(1, DungeonEndBlock.class),
+    DUNGEON_END(1, DungeonEndBlock.class, "END"),
 
-    SPECIAL_HEALTH_FULL(2, FullHealthBlock.class);
+    SPECIAL_HEALTH_FULL(2, FullHealthBlock.class, "FULL_HEALTH");
 
     private final int ID;
     private final Class<? extends AbstractBlock> clazz;
+    private final String commandName;
 
-    private BlockEnum(int ID, Class<? extends AbstractBlock> clazz) {
+    private BlockEnum(int ID, Class<? extends AbstractBlock> clazz, String commandName) {
         this.ID = ID;
         this.clazz = clazz;
+        this.commandName = commandName;
     }
 
     public int getID() {
@@ -46,6 +48,18 @@ public enum BlockEnum {
 
     public Class<? extends AbstractBlock> getClazz() {
         return this.clazz;
+    }
+
+    public String getCommandName() {
+        return commandName;
+    }
+
+    public static BlockEnum byCommandName(String text) {
+        for (BlockEnum type : BlockEnum.values()) {
+            if (type.getCommandName().equalsIgnoreCase(text))
+                return type;
+        }
+        return null;
     }
 
     public static Class<? extends AbstractBlock> byID(int ID) {
