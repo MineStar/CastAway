@@ -43,4 +43,13 @@ public class GameManager {
             this.blockMap.put(vector.clone(), block);
         }
     }
+
+    public Dungeon getDungeonByName(String dungeonName) {
+        for (Dungeon dungeon : this.dungeonMap.values()) {
+            if (dungeon.getDungeonName().equals(dungeonName)) {
+                return dungeon;
+            }
+        }
+        return null;
+    }
 }

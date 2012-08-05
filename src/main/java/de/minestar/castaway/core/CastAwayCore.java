@@ -20,7 +20,12 @@ package de.minestar.castaway.core;
 
 import java.io.File;
 
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
+
 import de.minestar.castaway.database.DatabaseManager;
+import de.minestar.castaway.listener.GameListener;
+import de.minestar.castaway.listener.RegisterListener;
 import de.minestar.castaway.manager.GameManager;
 import de.minestar.castaway.manager.PlayerManager;
 import de.minestar.minestarlibrary.AbstractCore;
@@ -33,6 +38,8 @@ public class CastAwayCore extends AbstractCore {
 
     public static GameManager gameManager;
     public static PlayerManager playerManager;
+
+    private Listener gameListener, registerListener;
 
     public CastAwayCore() {
         super(NAME);
@@ -50,6 +57,20 @@ public class CastAwayCore extends AbstractCore {
 
         gameManager.init();
 
+        return true;
+    }
+
+    @Override
+    protected boolean createListener() {
+        this.registerListener = new RegisterListener();
+        this.gameListener = new GameListener();
+        return true;
+    }
+
+    @Override
+    protected boolean registerEvents(PluginManager pm) {
+        pm.registerEvents(this.registerListener, this);
+        pm.registerEvents(this.gameListener, this);
         return true;
     }
 

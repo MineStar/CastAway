@@ -20,16 +20,23 @@ package de.minestar.castaway.listener;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.bukkit.gemo.utils.UtilPermissions;
 
+import de.minestar.castaway.blocks.AbstractBlock;
+import de.minestar.castaway.blocks.DungeonEndBlock;
+import de.minestar.castaway.blocks.DungeonStartBlock;
 import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.castaway.data.BlockVector;
+import de.minestar.castaway.data.Dungeon;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class RegisterListener {
+public class RegisterListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -50,9 +57,23 @@ public class RegisterListener {
             Player player = event.getPlayer();
             boolean isLeftClick = (event.getAction() == Action.LEFT_CLICK_BLOCK);
             if (player.isSneaking()) {
-                if (isLeftClick) {
-                    // AbstractBlock actionBlock = new DungeonStartBlock(
-                    // CastAwayCore.databaseManager.addActionBlock(actionBlock);
+                Dungeon dungeon = CastAwayCore.gameManager.getDungeonByName("test");
+                if (dungeon != null) {
+                    if (isLeftClick) {
+                        AbstractBlock actionBlock = new DungeonStartBlock(new BlockVector(event.getClickedBlock()), dungeon);
+                        CastAwayCore.databaseManager.addActionBlock(actionBlock);
+                        PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "Start block added for '" + dungeon.getDungeonName() + "'.");
+                        event.setCancelled(true);
+                        event.setUseInteractedBlock(Event.Result.DENY);
+                        event.setUseItemInHand(Event.Result.DENY);
+                    } else {
+                        AbstractBlock actionBlock = new DungeonEndBlock(new BlockVector(event.getClickedBlock()), dungeon);
+                        CastAwayCore.databaseManager.addActionBlock(actionBlock);
+                        PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "End block added for '" + dungeon.getDungeonName() + "'.");
+                        event.setCancelled(true);
+                        event.setUseInteractedBlock(Event.Result.DENY);
+                        event.setUseItemInHand(Event.Result.DENY);
+                    }
                 }
             }
         }
