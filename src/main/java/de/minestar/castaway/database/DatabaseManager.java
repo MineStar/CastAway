@@ -57,7 +57,9 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         addDungeon = con.prepareStatement("INSERT INTO dungeon (name, creator) VALUES (?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
-        deleteDungeon = con.prepareStatement("DELETR FROM dungeon WHERE id = ?");
+        deleteDungeon = con.prepareStatement("DELETE FROM dungeon WHERE id = ?");
+
+        addActionBlock = con.prepareStatement("INSERT INTO actionBlock (dungeon, x, y, z, world, actionType) VALUES (?, ?, ?, ?, ?, ?)");
 
     }
 
@@ -136,6 +138,8 @@ public class DatabaseManager extends AbstractMySQLHandler {
     // *** ACTION_BLOCKS ***
     // *********************
 
+    private PreparedStatement addActionBlock;
+
     public List<AbstractBlock> loadActionBlocks(Map<Integer, Dungeon> dungeonMap) {
 
         List<AbstractBlock> actionBlocks = new LinkedList<AbstractBlock>();
@@ -145,7 +149,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
             ResultSet rs = stat.executeQuery("SELECT id, dungeon, x, y, z, world, actionType FROM actionBlock");
 
             // TEMP VARS
-            int id;
+//            int id;
             int dungeonID;
             int x;
             int y;
@@ -158,7 +162,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
             while (rs.next()) {
                 // GET VALUES
-                id = rs.getInt(1);
+//                id = rs.getInt(1);
                 dungeonID = rs.getInt(2);
                 x = rs.getInt(3);
                 y = rs.getInt(4);
@@ -194,5 +198,22 @@ public class DatabaseManager extends AbstractMySQLHandler {
         }
 
         return actionBlocks;
+    }
+
+    public boolean addActionBlock(AbstractBlock actionBlock) {
+
+        try {
+            addActionBlock.setInt(1, actionBlock.getDungeon().getDungeonID());
+            addActionBlock.setInt(2, actionBlock.getVector().getX());
+            addActionBlock.setInt(3, actionBlock.getVector().getY());
+            addActionBlock.setInt(4, actionBlock.getVector().getZ());
+            addActionBlock.setString(5, actionBlock.getVector().getWorldName());
+            addActionBlock.setInt(6, actionBlock.getBlockType().getID());
+
+            return addActionBlock.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't add action block to database! ActionBlock = " + actionBlock);
+            return false;
+        }
     }
 }
