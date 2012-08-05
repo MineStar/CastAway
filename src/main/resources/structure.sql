@@ -29,8 +29,6 @@ CREATE  TABLE IF NOT EXISTS `actionBlock` (
   `y` INT NOT NULL ,
   `z` INT NOT NULL ,
   `world` TEXT NOT NULL ,
-  `blockID` INT NOT NULL ,
-  `blockSubID` INT NOT NULL ,
   `actionType` INT NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;

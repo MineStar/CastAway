@@ -19,14 +19,23 @@
 package de.minestar.castaway.database;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+
+import de.minestar.castaway.blocks.AbstractBlock;
+import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.castaway.data.BlockEnum;
+import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
@@ -59,9 +68,9 @@ public class DatabaseManager extends AbstractMySQLHandler {
     private PreparedStatement addDungeon;
     private PreparedStatement deleteDungeon;
 
-    public Map<String, Dungeon> loadDungeon() {
+    public Map<Integer, Dungeon> loadDungeon() {
 
-        Map<String, Dungeon> dungeonMap = new HashMap<String, Dungeon>();
+        Map<Integer, Dungeon> dungeonMap = new HashMap<Integer, Dungeon>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
             ResultSet rs = stat.executeQuery("SELECT id, name, creator FROM dungeon");
@@ -75,7 +84,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
                 id = rs.getInt(1);
                 name = rs.getString(2);
                 creator = rs.getString(3);
-                dungeonMap.put(name.toLowerCase(), new Dungeon(id, name, creator));
+                dungeonMap.put(id, new Dungeon(id, name, creator));
             }
 
         } catch (Exception e) {
@@ -123,7 +132,67 @@ public class DatabaseManager extends AbstractMySQLHandler {
         }
     }
 
-    /**
-     * BlockManager Wallsing ist extra sign
-     */
+    // *********************
+    // *** ACTION_BLOCKS ***
+    // *********************
+
+    public List<AbstractBlock> loadActionBlocks(Map<Integer, Dungeon> dungeonMap) {
+
+        List<AbstractBlock> actionBlocks = new LinkedList<AbstractBlock>();
+
+        try {
+            Statement stat = dbConnection.getConnection().createStatement();
+            ResultSet rs = stat.executeQuery("SELECT id, dungeon, x, y, z, world, actionType FROM actionBlock");
+
+            // TEMP VARS
+            int id;
+            int dungeonID;
+            int x;
+            int y;
+            int z;
+            String world;
+            int actionType;
+            BlockVector bVector;
+            Class<? extends AbstractBlock> clazz;
+            Constructor<?> constructor;
+
+            while (rs.next()) {
+                // GET VALUES
+                id = rs.getInt(1);
+                dungeonID = rs.getInt(2);
+                x = rs.getInt(3);
+                y = rs.getInt(4);
+                z = rs.getInt(5);
+                world = rs.getString(6);
+                // CHECK IF WORLD EXISTS
+                if (Bukkit.getWorld(world) == null) {
+                    ConsoleUtils.printWarning(CastAwayCore.NAME, "The world '" + world + "' was not found!");
+                    continue;
+                }
+                bVector = new BlockVector(world, x, y, z);
+
+                // GET ACTION
+                actionType = rs.getInt(7);
+
+                // GET CLASS FOR THE ACTION TYPE
+                clazz = BlockEnum.byID(actionType);
+                if (clazz == null) {
+                    ConsoleUtils.printWarning(CastAwayCore.NAME, "Unknown action type id '" + actionType + "'!");
+                    continue;
+                }
+
+                // CREATE AN INSTANCE OF THIS CLASS
+                constructor = clazz.getDeclaredConstructor(BlockVector.class, Dungeon.class);
+                AbstractBlock block = (AbstractBlock) constructor.newInstance(bVector, dungeonMap.get(dungeonID));
+
+                actionBlocks.add(block);
+            }
+
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't load action blocks from database!");
+            actionBlocks.clear();
+        }
+
+        return actionBlocks;
+    }
 }
