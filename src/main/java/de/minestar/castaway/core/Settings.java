@@ -80,16 +80,4 @@ public class Settings {
     public static Set<String> getAcceptedCommands() {
         return acceptedCommands;
     }
-
-    public static void main(String[] args) {
-
-        acceptedCommands = new HashSet<String>();
-        acceptedCommands.add("/respawn");
-        acceptedCommands.add("/message");
-        acceptedCommands.add("/m");
-        acceptedCommands.add("/r");
-        String s = Settings.getAcceptedCommands().toString();
-        s = s.substring(1, s.length() - 1).replaceAll(", "," | ");
-        System.out.println(s);
-    }
 }
