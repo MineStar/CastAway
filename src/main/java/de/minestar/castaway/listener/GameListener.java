@@ -37,6 +37,7 @@ import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.castaway.blocks.AbstractBlock;
 import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.castaway.core.Settings;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -46,7 +47,6 @@ public class GameListener implements Listener {
     private PlayerData playerData;
     private BlockVector vector;
     private static HashSet<Action> acceptedActions;
-    private static HashSet<String> acceptedCommands;
     private static HashSet<RegainReason> blockedRegainReasons;
 
     static {
@@ -54,12 +54,6 @@ public class GameListener implements Listener {
         acceptedActions.add(Action.LEFT_CLICK_BLOCK);
         acceptedActions.add(Action.RIGHT_CLICK_BLOCK);
         acceptedActions.add(Action.PHYSICAL);
-
-        acceptedCommands = new HashSet<String>();
-        acceptedCommands.add("/respawn");
-        acceptedCommands.add("/message");
-        acceptedCommands.add("/m");
-        acceptedCommands.add("/r");
 
         blockedRegainReasons = new HashSet<RegainReason>();
         blockedRegainReasons.add(RegainReason.SATIATED);
@@ -95,10 +89,13 @@ public class GameListener implements Listener {
         }
 
         // is the command accepted
-        if (!acceptedCommands.contains(this.getCommand(event.getMessage()))) {
+        if (!Settings.getAcceptedCommands().contains(this.getCommand(event.getMessage()))) {
             PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Du befindest dich zur Zeit in einem Dungeon!");
             PlayerUtils.sendInfo(event.getPlayer(), "Nutzbare Kommandos:");
-            PlayerUtils.sendInfo(event.getPlayer(), "/respawn | /message | /m | /r");
+            // FORMAT ACCEPTED COMMANDS
+            String s = Settings.getAcceptedCommands().toString();
+            s = s.substring(1, s.length() - 1).replaceAll(", ", " | ");
+            PlayerUtils.sendInfo(event.getPlayer(), s);
             event.setCancelled(true);
             return;
         }

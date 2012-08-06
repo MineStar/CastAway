@@ -1,0 +1,7 @@
+VERSION: ${pom.version}
+inDungeon:
+    acceptedCommands:
+        - /respawn
+        - /message
+        - /m
+        - /r

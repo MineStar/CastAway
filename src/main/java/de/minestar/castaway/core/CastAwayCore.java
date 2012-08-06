@@ -46,6 +46,11 @@ public class CastAwayCore extends AbstractCore {
     }
 
     @Override
+    protected boolean loadingConfigs(File dataFolder) {
+        return Settings.init(dataFolder, NAME, getDescription().getVersion());
+    }
+
+    @Override
     protected boolean createManager() {
 
         databaseManager = new DatabaseManager(NAME, new File(getDataFolder(), "sqlconfig.yml"));
