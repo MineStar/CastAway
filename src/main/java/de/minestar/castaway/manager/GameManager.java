@@ -52,4 +52,16 @@ public class GameManager {
         }
         return null;
     }
+
+    public void addDungeon(String dungeonName, String creatorName) {
+        Dungeon dungeon = new Dungeon(dungeonName, creatorName);
+        CastAwayCore.databaseManager.addDungeon(dungeon);
+        this.dungeonMap.put(dungeon.getDungeonID(), dungeon);
+    }
+
+    public void deleteDungeon(Dungeon dungeon) {
+        // TODO: Delete all references
+        this.dungeonMap.remove(dungeon.getDungeonID());
+        CastAwayCore.databaseManager.deleteDungeon(dungeon);
+    }
 }

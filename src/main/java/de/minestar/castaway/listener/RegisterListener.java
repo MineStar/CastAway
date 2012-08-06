@@ -61,6 +61,7 @@ public class RegisterListener implements Listener {
             Player player = event.getPlayer();
             boolean isLeftClick = (event.getAction() == Action.LEFT_CLICK_BLOCK);
             if (player.isSneaking()) {
+                //  TODO: Remove debug
                 Dungeon dungeon = CastAwayCore.gameManager.getDungeonByName("test");
                 if (dungeon != null) {
                     if (isLeftClick && event.getClickedBlock().getType().equals(Material.STONE_PLATE)) {
