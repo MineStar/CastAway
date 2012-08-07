@@ -34,7 +34,7 @@ public abstract class AbstractActionBlock {
     private boolean handleRightClick = false;
     private boolean handlePhysical = false;
     private boolean executeIfNotInDungeon = false;
-    private ActionBlockType blockType = null;
+    private final ActionBlockType blockType;
 
     private final int TypeID;
     private final byte SubID;
@@ -142,13 +142,5 @@ public abstract class AbstractActionBlock {
      */
     public ActionBlockType getBlockType() {
         return blockType;
-    }
-
-    /**
-     * @param blockType
-     *            the blockType to set
-     */
-    protected void setBlockType(ActionBlockType blockType) {
-        this.blockType = blockType;
     }
 }
