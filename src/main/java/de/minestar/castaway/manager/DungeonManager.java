@@ -72,7 +72,7 @@ public class DungeonManager {
     }
 
     public Dungeon getDungeon(String name) {
-        return dungeonNameMap.get(name);
+        return dungeonNameMap.get(name.toLowerCase());
     }
 
     public Dungeon getDungeon(int id) {
