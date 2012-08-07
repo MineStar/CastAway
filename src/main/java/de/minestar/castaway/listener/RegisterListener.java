@@ -51,13 +51,19 @@ public class RegisterListener implements Listener {
             return;
         }
 
-        Block block = event.getClickedBlock();
-        BlockVector vector = new BlockVector(block);
-        AbstractActionBlock actionBlock = createInstance(selection.getActionBlockType(), vector, selection.getDungeon());
+        if (!selection.isSignEdit()) {
+            // No HallOfFame-Edit => register block
+            Block block = event.getClickedBlock();
+            BlockVector vector = new BlockVector(block);
+            AbstractActionBlock actionBlock = createInstance(selection.getActionBlockType(), vector, selection.getDungeon());
 
-        selection.getDungeon().registerBlocks(actionBlock);
-        CastAwayCore.gameManager.registerSingleBlock(actionBlock);
-        PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde registiert.");
+            selection.getDungeon().registerBlocks(actionBlock);
+            CastAwayCore.gameManager.registerSingleBlock(actionBlock);
+            PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde registiert.");
+        } else {
+            // HallOfFame-Edit => register / unregister Signs
+            // TODO: implement...
+        }
     }
 
     private AbstractActionBlock createInstance(ActionBlockType actionBlockType, BlockVector vector, Dungeon dungeon) {
