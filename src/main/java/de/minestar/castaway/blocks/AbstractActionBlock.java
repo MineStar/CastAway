@@ -25,7 +25,7 @@ import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
 
-public abstract class AbstractBlock {
+public abstract class AbstractActionBlock {
 
     protected final Dungeon dungeon;
     protected final BlockVector vector;
@@ -36,7 +36,7 @@ public abstract class AbstractBlock {
     private boolean executeIfNotInDungeon = false;
     private BlockEnum blockType = BlockEnum.UNKNOWN;
 
-    public AbstractBlock(BlockVector vector, Dungeon dungeon) {
+    public AbstractActionBlock(BlockVector vector, Dungeon dungeon) {
         this.vector = vector;
         this.dungeon = dungeon;
     }

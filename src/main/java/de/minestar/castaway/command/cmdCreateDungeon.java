@@ -33,14 +33,15 @@ public class cmdCreateDungeon extends AbstractCommand {
     @Override
     public void execute(String[] args, Player player) {
 
+        String dungeonName = args[0];
         // CHECK IF DUNGEON NAME IS ALREADY EXISTING
-        if (CastAwayCore.gameManager.getDungeonByName(args[0]) != null) {
+        if (CastAwayCore.dungeonManager.getDungeon(dungeonName) != null) {
             PlayerUtils.sendError(player, pluginName, "Der Dungeon '" + args[0] + "' existiert bereits.");
             return;
         }
 
         // CREATE DUNGEON
-        CastAwayCore.gameManager.addDungeon(args[0], player.getName());
+        CastAwayCore.dungeonManager.addDungeon(dungeonName, player.getName());
         PlayerUtils.sendSuccess(player, pluginName, "Der Dungeon '" + args[0] + "' wurde erstellt!");
     }
 }

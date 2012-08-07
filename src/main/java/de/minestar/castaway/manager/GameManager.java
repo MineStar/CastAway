@@ -18,50 +18,43 @@
 
 package de.minestar.castaway.manager;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
-import de.minestar.castaway.blocks.AbstractBlock;
+import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 
 public class GameManager {
-    private Map<BlockVector, AbstractBlock> blockMap;
-    private Map<Integer, Dungeon> dungeonMap;
+    private Map<BlockVector, AbstractActionBlock> blockMap;
 
     public void init() {
-        this.dungeonMap = CastAwayCore.databaseManager.loadDungeon();
-        this.blockMap = CastAwayCore.databaseManager.loadActionBlocks(this.dungeonMap);
+        blockMap = new HashMap<BlockVector, AbstractActionBlock>();
+        // REGISTER ALL ACTION BLOCKS
+        Collection<Dungeon> dungeons = CastAwayCore.dungeonManager.getDungeons();
+        for (Dungeon dungeon : dungeons)
+            blockMap.putAll(dungeon.getRegisteredBlocks());
     }
 
-    public AbstractBlock getBlock(BlockVector vector) {
+    public AbstractActionBlock getBlock(BlockVector vector) {
         return this.blockMap.get(vector);
     }
 
-    public void addBlock(BlockVector vector, AbstractBlock block) {
+    public void addBlock(BlockVector vector, AbstractActionBlock block) {
         if (this.getBlock(vector) != null) {
             this.blockMap.put(vector.clone(), block);
         }
     }
 
-    public Dungeon getDungeonByName(String dungeonName) {
-        for (Dungeon dungeon : this.dungeonMap.values()) {
-            if (dungeon.getDungeonName().equals(dungeonName)) {
-                return dungeon;
-            }
+    public void unRegisterSingleBlock(AbstractActionBlock actionBlock) {
+        blockMap.remove(actionBlock.getVector());
+    }
+
+    public void unRegisterBlocks(Collection<AbstractActionBlock> actionBlocks) {
+        for (AbstractActionBlock actionBlock : actionBlocks) {
+            blockMap.remove(actionBlock.getVector());
         }
-        return null;
-    }
-
-    public void addDungeon(String dungeonName, String creatorName) {
-        Dungeon dungeon = new Dungeon(dungeonName, creatorName);
-        CastAwayCore.databaseManager.addDungeon(dungeon);
-        this.dungeonMap.put(dungeon.getDungeonID(), dungeon);
-    }
-
-    public void deleteDungeon(Dungeon dungeon) {
-        // TODO: Delete all references
-        this.dungeonMap.remove(dungeon.getDungeonID());
-        CastAwayCore.databaseManager.deleteDungeon(dungeon);
     }
 }

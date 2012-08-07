@@ -28,7 +28,7 @@ import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class DungeonEndBlock extends AbstractBlock {
+public class DungeonEndBlock extends AbstractActionBlock {
 
     public DungeonEndBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
@@ -48,7 +48,7 @@ public class DungeonEndBlock extends AbstractBlock {
 
         // send info
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + data.getDungeon().getDungeonName() + "' erfolgreich beendet!");
+        PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + data.getDungeon().getName() + "' erfolgreich beendet!");
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
 
         // update the player & the data

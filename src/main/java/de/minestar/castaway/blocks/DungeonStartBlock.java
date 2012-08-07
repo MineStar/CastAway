@@ -28,7 +28,7 @@ import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class DungeonStartBlock extends AbstractBlock {
+public class DungeonStartBlock extends AbstractActionBlock {
 
     public DungeonStartBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
@@ -57,7 +57,7 @@ public class DungeonStartBlock extends AbstractBlock {
 
         // send info
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + dungeon.getDungeonName() + "'.");
+        PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + dungeon.getName() + "'.");
         PlayerUtils.sendInfo(player, "Ersteller: " + dungeon.getAuthor());
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
         return false;

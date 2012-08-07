@@ -25,11 +25,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 
-import de.minestar.castaway.blocks.AbstractBlock;
+import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.BlockEnum;
 import de.minestar.castaway.data.BlockVector;
@@ -52,11 +54,18 @@ public class DatabaseManager extends AbstractMySQLHandler {
     @Override
     protected void createStatements(String pluginName, Connection con) throws Exception {
 
+        /* DUNGEON */
         addDungeon = con.prepareStatement("INSERT INTO dungeon (name, creator) VALUES (?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         deleteDungeon = con.prepareStatement("DELETE FROM dungeon WHERE id = ?");
 
+        /* ACTION BLOCKS */
+
         addActionBlock = con.prepareStatement("INSERT INTO actionBlock (dungeon, x, y, z, world, actionType) VALUES (?, ?, ?, ?, ?, ?)");
+
+        deleteSingleRegisteredBlock = con.prepareStatement("DELETE FROM actionBlock WHERE dungeon = ? AND y = ? AND x = ? AND z = ? AND world = ?");
+
+        deleteRegisteredBlocks = con.prepareStatement("DELETE FROM actionBlock WHERE dungeon = ?");
 
     }
 
@@ -97,7 +106,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
     public boolean addDungeon(Dungeon dungeon) {
 
         try {
-            addDungeon.setString(1, dungeon.getDungeonName());
+            addDungeon.setString(1, dungeon.getName());
             addDungeon.setString(2, dungeon.getAuthor());
 
             addDungeon.executeUpdate();
@@ -107,7 +116,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
             int id = 0;
             if (rs.next()) {
                 id = rs.getInt(1);
-                dungeon.setDungeonID(id);
+                dungeon.setID(id);
                 return true;
             } else {
                 ConsoleUtils.printError(CastAwayCore.NAME, "Can't get the id for the dungeon = " + dungeon);
@@ -122,45 +131,44 @@ public class DatabaseManager extends AbstractMySQLHandler {
     public boolean deleteDungeon(Dungeon dungeon) {
 
         try {
-            deleteDungeon.setInt(1, dungeon.getDungeonID());
-
+            deleteDungeon.setInt(1, dungeon.getID());
             return deleteDungeon.executeUpdate() == 1;
         } catch (Exception e) {
             ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't delete the dungeon = " + dungeon);
             return false;
         }
     }
-
     // *********************
     // *** ACTION_BLOCKS ***
     // *********************
 
     private PreparedStatement addActionBlock;
+    private PreparedStatement deleteSingleRegisteredBlock;
+    private PreparedStatement deleteRegisteredBlocks;
 
-    public Map<BlockVector, AbstractBlock> loadActionBlocks(Map<Integer, Dungeon> dungeonMap) {
+    public List<AbstractActionBlock> loadRegisteredActionBlocks(Dungeon dungeon) {
 
-        Map<BlockVector, AbstractBlock> actionBlocksMap = new HashMap<BlockVector, AbstractBlock>();
-
+        List<AbstractActionBlock> actionBlockList = new LinkedList<AbstractActionBlock>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id, dungeon, x, y, z, world, actionType FROM actionBlock");
+            ResultSet rs = stat.executeQuery("SELECT id, dungeon, x, y, z, world, actionType FROM actionBlock WHERE dungeon = " + dungeon.getID());
 
             // TEMP VARS
 //            int id;
-            int dungeonID;
+//            int dungeonID;
             int x;
             int y;
             int z;
             String world;
             int actionType;
             BlockVector bVector;
-            Class<? extends AbstractBlock> clazz;
+            Class<? extends AbstractActionBlock> clazz;
             Constructor<?> constructor;
 
             while (rs.next()) {
                 // GET VALUES
 //                id = rs.getInt(1);
-                dungeonID = rs.getInt(2);
+//                dungeonID = rs.getInt(2)
                 x = rs.getInt(3);
                 y = rs.getInt(4);
                 z = rs.getInt(5);
@@ -184,23 +192,23 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
                 // CREATE AN INSTANCE OF THIS CLASS
                 constructor = clazz.getDeclaredConstructor(BlockVector.class, Dungeon.class);
-                AbstractBlock block = (AbstractBlock) constructor.newInstance(bVector, dungeonMap.get(dungeonID));
+                AbstractActionBlock block = (AbstractActionBlock) constructor.newInstance(bVector, dungeon);
 
-                actionBlocksMap.put(bVector, block);
+                actionBlockList.add(block);
             }
 
         } catch (Exception e) {
-            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't load action blocks from database!");
-            actionBlocksMap.clear();
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't load action blocks from database for dungeon = " + dungeon);
+            actionBlockList.clear();
         }
 
-        return actionBlocksMap;
+        return actionBlockList;
     }
 
-    public boolean addActionBlock(AbstractBlock actionBlock) {
+    public boolean addActionBlock(AbstractActionBlock actionBlock) {
 
         try {
-            addActionBlock.setInt(1, actionBlock.getDungeon().getDungeonID());
+            addActionBlock.setInt(1, actionBlock.getDungeon().getID());
             addActionBlock.setInt(2, actionBlock.getVector().getX());
             addActionBlock.setInt(3, actionBlock.getVector().getY());
             addActionBlock.setInt(4, actionBlock.getVector().getZ());
@@ -210,6 +218,34 @@ public class DatabaseManager extends AbstractMySQLHandler {
             return addActionBlock.executeUpdate() == 1;
         } catch (Exception e) {
             ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't add action block to database! ActionBlock = " + actionBlock);
+            return false;
+        }
+    }
+
+    public boolean deleteSingleRegisteredBlock(AbstractActionBlock actionBlock) {
+        // DELETE FROM actionBlock WHERE dungeon = ? AND y = ? AND x = ? AND z =
+        // ? AND world = ?
+        try {
+            deleteSingleRegisteredBlock.setInt(1, actionBlock.getDungeon().getID());
+            deleteSingleRegisteredBlock.setInt(2, actionBlock.getVector().getY());
+            deleteSingleRegisteredBlock.setInt(3, actionBlock.getVector().getX());
+            deleteSingleRegisteredBlock.setInt(4, actionBlock.getVector().getZ());
+            deleteSingleRegisteredBlock.setString(5, actionBlock.getVector().getWorldName());
+
+            return deleteSingleRegisteredBlock.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't delete single registered blocks from database! ActionBlock =" + actionBlock);
+            return false;
+        }
+    }
+
+    public boolean deleteRegisteredBlocks(Dungeon dungeon) {
+        try {
+            deleteRegisteredBlocks.setInt(1, dungeon.getID());
+
+            return deleteRegisteredBlocks.executeUpdate() >= 0;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't delete registered blocks from database! Dungeon = " + dungeon);
             return false;
         }
     }

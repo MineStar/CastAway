@@ -35,7 +35,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.bukkit.gemo.utils.UtilPermissions;
 
-import de.minestar.castaway.blocks.AbstractBlock;
+import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.core.Settings;
 import de.minestar.castaway.data.BlockVector;
@@ -120,7 +120,7 @@ public class GameListener implements Listener {
         this.vector.update(event.getClickedBlock());
 
         // is the block registered?
-        AbstractBlock block = CastAwayCore.gameManager.getBlock(vector);
+        AbstractActionBlock block = CastAwayCore.gameManager.getBlock(vector);
         if (block == null) {
             return;
         }

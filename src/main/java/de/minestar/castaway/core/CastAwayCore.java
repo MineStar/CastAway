@@ -29,6 +29,7 @@ import de.minestar.castaway.command.cmdDeleteDungeon;
 import de.minestar.castaway.database.DatabaseManager;
 import de.minestar.castaway.listener.GameListener;
 import de.minestar.castaway.listener.RegisterListener;
+import de.minestar.castaway.manager.DungeonManager;
 import de.minestar.castaway.manager.GameManager;
 import de.minestar.castaway.manager.PlayerManager;
 import de.minestar.minestarlibrary.AbstractCore;
@@ -40,6 +41,7 @@ public class CastAwayCore extends AbstractCore {
 
     public static DatabaseManager databaseManager;
 
+    public static DungeonManager dungeonManager;
     public static GameManager gameManager;
     public static PlayerManager playerManager;
 
@@ -61,9 +63,11 @@ public class CastAwayCore extends AbstractCore {
         if (!databaseManager.hasConnection())
             return false;
 
+        dungeonManager = new DungeonManager();
         gameManager = new GameManager();
         playerManager = new PlayerManager();
 
+        dungeonManager.init();
         gameManager.init();
 
         return true;

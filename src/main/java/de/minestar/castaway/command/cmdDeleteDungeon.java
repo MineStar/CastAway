@@ -34,15 +34,16 @@ public class cmdDeleteDungeon extends AbstractCommand {
     @Override
     public void execute(String[] args, Player player) {
 
+        String dungeonName = args[0];
         // CHECK IF DUNGEON NAME IS EXISTING
-        Dungeon dungeon = CastAwayCore.gameManager.getDungeonByName(args[0]);
+        Dungeon dungeon = CastAwayCore.dungeonManager.getDungeon(dungeonName);
         if (dungeon == null) {
-            PlayerUtils.sendError(player, pluginName, "Der Dungeon '" + args[0] + "' existiert nicht.");
+            PlayerUtils.sendError(player, pluginName, "Der Dungeon '" + dungeonName + "' existiert nicht.");
             return;
         }
 
         // CREATE DUNGEON
-        CastAwayCore.gameManager.deleteDungeon(dungeon);
-        PlayerUtils.sendSuccess(player, pluginName, "Der Dungeon '" + args[0] + "' wurde gelöscht!");
+        CastAwayCore.dungeonManager.deleteDungeon(dungeon);
+        PlayerUtils.sendSuccess(player, pluginName, "Der Dungeon '" + dungeonName + "' wurde gelöscht!");
     }
 }

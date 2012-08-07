@@ -28,7 +28,7 @@ import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class FullHealthBlock extends AbstractBlock {
+public class FullHealthBlock extends AbstractActionBlock {
 
     public FullHealthBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon);
