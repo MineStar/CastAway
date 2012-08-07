@@ -78,4 +78,8 @@ public class DungeonManager {
     public Dungeon getDungeon(int id) {
         return dungeonIDMap.get(id);
     }
+
+    public boolean exist(String dungeonName) {
+        return dungeonNameMap.containsKey(dungeonName.toLowerCase());
+    }
 }

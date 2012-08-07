@@ -26,6 +26,7 @@ import org.bukkit.plugin.PluginManager;
 import de.minestar.castaway.command.cmdCastAway;
 import de.minestar.castaway.command.cmdCreateDungeon;
 import de.minestar.castaway.command.cmdDeleteDungeon;
+import de.minestar.castaway.command.cmdRegister;
 import de.minestar.castaway.command.cmdRespawn;
 import de.minestar.castaway.database.DatabaseManager;
 import de.minestar.castaway.listener.GameListener;
@@ -96,8 +97,9 @@ public class CastAwayCore extends AbstractCore {
                 new cmdRespawn("/respawn",      "",        "castaway.command.respawn"),
                 
                 new cmdCastAway("/castaway", "", "castaway.command",                 
-                    new cmdCreateDungeon("create",      "<DungeonName>",        "castaway.command.createdungeon"),
-                    new cmdDeleteDungeon("delete",      "<DungeonName>",        "castaway.command.deletedungeon")
+                    new cmdCreateDungeon(   "create",       "<DungeonName>",        "castaway.command.createdungeon"),
+                    new cmdDeleteDungeon(   "delete",       "<DungeonName>",        "castaway.command.deletedungeon"),
+                    new cmdRegister(        "register",     "<DungeonName> <ActionBlockType>", "castaway.command.registerblock")
                 )
         );
         return true;

@@ -18,22 +18,22 @@
 
 package de.minestar.castaway.listener;
 
-import org.bukkit.Material;
+import java.lang.reflect.Constructor;
+
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.bukkit.gemo.utils.UtilPermissions;
-
 import de.minestar.castaway.blocks.AbstractActionBlock;
-import de.minestar.castaway.blocks.DungeonEndBlock;
-import de.minestar.castaway.blocks.DungeonStartBlock;
 import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.castaway.data.BlockEnum;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
+import de.minestar.castaway.data.RegisterSelection;
+import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class RegisterListener implements Listener {
@@ -45,47 +45,30 @@ public class RegisterListener implements Listener {
             return;
         }
 
-        // is the ItemInHand correct?
-        if (event.getPlayer().getItemInHand().getType().equals(Material.BONE)) {
-            // check permissions?
-            if (!UtilPermissions.playerCanUseCommand(event.getPlayer(), "castaway.admin")) {
-                PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "You are not allowed to do this!");
-                event.setCancelled(true);
-                return;
-            }
+        Player player = event.getPlayer();
+        RegisterSelection selection = CastAwayCore.playerManager.getBlockTypeToRegister(player.getName());
+        if (selection == null) {
+            return;
+        }
 
-            event.setCancelled(true);
-            event.setUseInteractedBlock(Event.Result.DENY);
-            event.setUseItemInHand(Event.Result.DENY);
+        Block block = event.getClickedBlock();
+        BlockVector vector = new BlockVector(block);
+        AbstractActionBlock actionBlock = createInstance(selection.getActionBlockType(), vector, selection.getDungeon());
 
-            Player player = event.getPlayer();
-            boolean isLeftClick = (event.getAction() == Action.LEFT_CLICK_BLOCK);
-            if (player.isSneaking()) {
-                // TODO: Remove debug
-                Dungeon dungeon = CastAwayCore.dungeonManager.getDungeon("test");
-                if (dungeon != null) {
-                    if (isLeftClick && event.getClickedBlock().getType().equals(Material.STONE_PLATE)) {
-                        AbstractActionBlock actionBlock = new DungeonStartBlock(new BlockVector(event.getClickedBlock()), dungeon);
-                        if (CastAwayCore.databaseManager.addActionBlock(actionBlock)) {
-                            CastAwayCore.databaseManager.addActionBlock(actionBlock);
-                            CastAwayCore.gameManager.addBlock(actionBlock.getVector(), actionBlock);
-                            PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "Start block added for '" + dungeon.getName() + "'.");
-                        } else {
-                            PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Error creating block in database!");
-                        }
-                    } else if (!isLeftClick && event.getClickedBlock().getType().equals(Material.STONE_BUTTON)) {
-                        AbstractActionBlock actionBlock = new DungeonEndBlock(new BlockVector(event.getClickedBlock()), dungeon);
-                        if (CastAwayCore.databaseManager.addActionBlock(actionBlock)) {
-                            CastAwayCore.gameManager.addBlock(actionBlock.getVector(), actionBlock);
-                            PlayerUtils.sendSuccess(event.getPlayer(), CastAwayCore.NAME, "End block added for '" + dungeon.getName() + "'.");
-                        } else {
-                            PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Error creating block in database!");
-                        }
-                    }
-                } else {
-                    PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Dungeon 'test' not found!");
-                }
-            }
+        selection.getDungeon().registerBlocks(actionBlock);
+        CastAwayCore.gameManager.registerSingleBlock(actionBlock);
+        PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde registiert.");
+    }
+
+    private AbstractActionBlock createInstance(BlockEnum actionBlockType, BlockVector vector, Dungeon dungeon) {
+        AbstractActionBlock block = null;
+        try {
+            Constructor<? extends AbstractActionBlock> constr = actionBlockType.getClazz().getDeclaredConstructor(BlockVector.class, Dungeon.class);
+            block = constr.newInstance(vector, dungeon);
+            return block;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't create an instance for the Block " + actionBlockType);
+            return null;
         }
     }
 }

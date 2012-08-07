@@ -18,6 +18,9 @@
 
 package de.minestar.castaway.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.blocks.DungeonStartBlock;
@@ -35,6 +38,14 @@ public enum BlockEnum {
     private final int ID;
     private final Class<? extends AbstractActionBlock> clazz;
     private final String commandName;
+
+    private static Map<Integer, BlockEnum> mapByID;
+    static {
+        mapByID = new HashMap<Integer, BlockEnum>();
+        for (BlockEnum b : BlockEnum.values()) {
+            mapByID.put(b.ID, b);
+        }
+    }
 
     private BlockEnum(int ID, Class<? extends AbstractActionBlock> clazz, String commandName) {
         this.ID = ID;
@@ -62,11 +73,7 @@ public enum BlockEnum {
         return null;
     }
 
-    public static Class<? extends AbstractActionBlock> byID(int ID) {
-        for (BlockEnum type : BlockEnum.values()) {
-            if (type.getID() == ID)
-                return type.getClazz();
-        }
-        return UNKNOWN.getClazz();
+    public static BlockEnum byID(int ID) {
+        return mapByID.get(ID);
     }
 }

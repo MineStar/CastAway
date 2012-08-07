@@ -42,9 +42,11 @@ public class GameManager {
         return this.blockMap.get(vector);
     }
 
-    public void addBlock(BlockVector vector, AbstractActionBlock block) {
-        if (this.getBlock(vector) != null) {
-            this.blockMap.put(vector.clone(), block);
+    public void registerSingleBlock(AbstractActionBlock block) {
+        if (this.getBlock(block.getVector()) != null) {
+            this.blockMap.put(block.getVector().clone(), block);
+            block.getDungeon().registerBlocks(block);
+            CastAwayCore.databaseManager.addActionBlock(block);
         }
     }
 
