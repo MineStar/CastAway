@@ -53,7 +53,9 @@ public class PlayerData {
         Player player = Bukkit.getPlayerExact(this.playerName);
         if (player != null) {
             if (this.inDungeon) {
+                player.setAllowFlight(false);
                 player.setGameMode(GameMode.ADVENTURE);
+                player.getInventory().clear();
             } else {
                 player.setGameMode(GameMode.SURVIVAL);
             }

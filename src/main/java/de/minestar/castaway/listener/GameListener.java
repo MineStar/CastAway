@@ -227,7 +227,6 @@ public class GameListener implements Listener {
         this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
         if (this.playerData.isInDungeon()) {
             this.playerData.quitDungeon();
-
             // TP to spawn on next connect
             MinestarCore.getPlayer(event.getPlayer()).setBoolean("main.wasHere", false);
         }
@@ -238,7 +237,6 @@ public class GameListener implements Listener {
         this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
         if (this.playerData.isInDungeon()) {
             this.playerData.quitDungeon();
-
             // TP to spawn on next connect
             MinestarCore.getPlayer(event.getPlayer()).setBoolean("main.wasHere", false);
         }
