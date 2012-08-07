@@ -105,7 +105,9 @@ public class CastAwayCore extends AbstractCore {
     }
     @Override
     protected boolean commonDisable() {
-        databaseManager.closeConnection();
-        return !databaseManager.hasConnection();
+        if (databaseManager.hasConnection()) {
+            databaseManager.closeConnection();
+        }
+        return true;
     }
 }

@@ -19,6 +19,7 @@
 package de.minestar.castaway.manager;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.minestar.castaway.core.CastAwayCore;
@@ -30,9 +31,10 @@ public class DungeonManager {
     private Map<String, Dungeon> dungeonNameMap;
 
     public DungeonManager() {
-
+        dungeonIDMap = new HashMap<Integer, Dungeon>();
+        dungeonNameMap = new HashMap<String, Dungeon>();
     }
-    
+
     public void init() {
         loadDungeons();
     }
