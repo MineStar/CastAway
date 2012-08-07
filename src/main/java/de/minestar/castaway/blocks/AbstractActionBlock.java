@@ -36,9 +36,18 @@ public abstract class AbstractActionBlock {
     private boolean executeIfNotInDungeon = false;
     private BlockEnum blockType = BlockEnum.UNKNOWN;
 
-    public AbstractActionBlock(BlockVector vector, Dungeon dungeon) {
+    private final int TypeID;
+    private final byte SubID;
+
+    public AbstractActionBlock(BlockVector vector, Dungeon dungeon, int TypeID) {
+        this(vector, dungeon, TypeID, (byte) 0);
+    }
+
+    public AbstractActionBlock(BlockVector vector, Dungeon dungeon, int TypeID, byte SubID) {
         this.vector = vector;
         this.dungeon = dungeon;
+        this.TypeID = TypeID;
+        this.SubID = SubID;
     }
 
     /**
@@ -50,6 +59,14 @@ public abstract class AbstractActionBlock {
      *         <b>false</b>
      */
     public abstract boolean execute(Player player, PlayerData data);
+
+    public int getTypeID() {
+        return TypeID;
+    }
+
+    public byte getSubID() {
+        return SubID;
+    }
 
     public Dungeon getDungeon() {
         return dungeon;
