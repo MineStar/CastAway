@@ -33,7 +33,7 @@ import org.bukkit.Bukkit;
 
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
-import de.minestar.castaway.data.BlockEnum;
+import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
@@ -184,7 +184,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
                 actionType = rs.getInt(7);
 
                 // GET CLASS FOR THE ACTION TYPE
-                clazz = BlockEnum.byID(actionType).getClazz();
+                clazz = ActionBlockType.byID(actionType).getClazz();
                 if (clazz == null) {
                     ConsoleUtils.printWarning(CastAwayCore.NAME, "Unknown action type id '" + actionType + "'!");
                     continue;

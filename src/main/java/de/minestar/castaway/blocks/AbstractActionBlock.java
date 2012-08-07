@@ -20,7 +20,7 @@ package de.minestar.castaway.blocks;
 
 import org.bukkit.entity.Player;
 
-import de.minestar.castaway.data.BlockEnum;
+import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
@@ -34,18 +34,19 @@ public abstract class AbstractActionBlock {
     private boolean handleRightClick = false;
     private boolean handlePhysical = false;
     private boolean executeIfNotInDungeon = false;
-    private BlockEnum blockType = BlockEnum.UNKNOWN;
+    private ActionBlockType blockType = null;
 
     private final int TypeID;
     private final byte SubID;
 
-    public AbstractActionBlock(BlockVector vector, Dungeon dungeon, int TypeID) {
-        this(vector, dungeon, TypeID, (byte) 0);
+    public AbstractActionBlock(BlockVector vector, Dungeon dungeon, ActionBlockType blockType, int TypeID) {
+        this(vector, dungeon, blockType, TypeID, (byte) 0);
     }
 
-    public AbstractActionBlock(BlockVector vector, Dungeon dungeon, int TypeID, byte SubID) {
+    public AbstractActionBlock(BlockVector vector, Dungeon dungeon, ActionBlockType blockType, int TypeID, byte SubID) {
         this.vector = vector;
         this.dungeon = dungeon;
+        this.blockType = blockType;
         this.TypeID = TypeID;
         this.SubID = SubID;
     }
@@ -139,7 +140,7 @@ public abstract class AbstractActionBlock {
     /**
      * @return the blockType
      */
-    public BlockEnum getBlockType() {
+    public ActionBlockType getBlockType() {
         return blockType;
     }
 
@@ -147,7 +148,7 @@ public abstract class AbstractActionBlock {
      * @param blockType
      *            the blockType to set
      */
-    protected void setBlockType(BlockEnum blockType) {
+    protected void setBlockType(ActionBlockType blockType) {
         this.blockType = blockType;
     }
 }

@@ -29,7 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
-import de.minestar.castaway.data.BlockEnum;
+import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.RegisterSelection;
@@ -60,7 +60,7 @@ public class RegisterListener implements Listener {
         PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde registiert.");
     }
 
-    private AbstractActionBlock createInstance(BlockEnum actionBlockType, BlockVector vector, Dungeon dungeon) {
+    private AbstractActionBlock createInstance(ActionBlockType actionBlockType, BlockVector vector, Dungeon dungeon) {
         AbstractActionBlock block = null;
         try {
             Constructor<? extends AbstractActionBlock> constr = actionBlockType.getClazz().getDeclaredConstructor(BlockVector.class, Dungeon.class);

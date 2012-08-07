@@ -23,7 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
-import de.minestar.castaway.data.BlockEnum;
+import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
@@ -32,8 +32,7 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 public class FullHealthBlock extends AbstractActionBlock {
 
     public FullHealthBlock(BlockVector vector, Dungeon dungeon) {
-        super(vector, dungeon, Material.STONE_PLATE.getId());
-        this.setBlockType(BlockEnum.SPECIAL_HEALTH_FULL);
+        super(vector, dungeon, ActionBlockType.SPECIAL_HEALTH_FULL, Material.STONE_PLATE.getId());
         this.setHandlePhysical();
     }
 

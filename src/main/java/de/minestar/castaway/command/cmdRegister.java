@@ -21,7 +21,7 @@ package de.minestar.castaway.command;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
-import de.minestar.castaway.data.BlockEnum;
+import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.RegisterSelection;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
@@ -51,7 +51,7 @@ public class cmdRegister extends AbstractCommand {
             return;
         }
 
-        BlockEnum actionblockType = BlockEnum.byID(actionTypeID);
+        ActionBlockType actionblockType = ActionBlockType.byID(actionTypeID);
         if (actionblockType == null) {
             PlayerUtils.sendSuccess(player, pluginName, "Unbekannter ActionBlockTyp!");
             return;

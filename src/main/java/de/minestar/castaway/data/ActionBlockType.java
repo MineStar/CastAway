@@ -26,8 +26,7 @@ import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.blocks.DungeonStartBlock;
 import de.minestar.castaway.blocks.FullHealthBlock;
 
-public enum BlockEnum {
-    UNKNOWN(-1, null, null),
+public enum ActionBlockType {
 
     DUNGEON_START(0, DungeonStartBlock.class, "START"),
 
@@ -39,15 +38,16 @@ public enum BlockEnum {
     private final Class<? extends AbstractActionBlock> clazz;
     private final String commandName;
 
-    private static Map<Integer, BlockEnum> mapByID;
+    private static Map<Integer, ActionBlockType> mapByID;
+
     static {
-        mapByID = new HashMap<Integer, BlockEnum>();
-        for (BlockEnum b : BlockEnum.values()) {
+        mapByID = new HashMap<Integer, ActionBlockType>();
+        for (ActionBlockType b : ActionBlockType.values()) {
             mapByID.put(b.ID, b);
         }
     }
 
-    private BlockEnum(int ID, Class<? extends AbstractActionBlock> clazz, String commandName) {
+    private ActionBlockType(int ID, Class<? extends AbstractActionBlock> clazz, String commandName) {
         this.ID = ID;
         this.clazz = clazz;
         this.commandName = commandName;
@@ -65,15 +65,15 @@ public enum BlockEnum {
         return commandName;
     }
 
-    public static BlockEnum byCommandName(String text) {
-        for (BlockEnum type : BlockEnum.values()) {
+    public static ActionBlockType byCommandName(String text) {
+        for (ActionBlockType type : ActionBlockType.values()) {
             if (type.getCommandName().equalsIgnoreCase(text))
                 return type;
         }
         return null;
     }
 
-    public static BlockEnum byID(int ID) {
+    public static ActionBlockType byID(int ID) {
         return mapByID.get(ID);
     }
 }
