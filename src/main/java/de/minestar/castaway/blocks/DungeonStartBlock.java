@@ -47,7 +47,8 @@ public class DungeonStartBlock extends AbstractActionBlock {
         }
 
         // join the dungeon
-        this.dungeon.playerJoin(data);
+        if (!data.isInDungeon())
+            this.dungeon.playerJoin(data);
         return false;
     }
 }
