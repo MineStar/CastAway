@@ -18,7 +18,6 @@
 
 package de.minestar.castaway.blocks;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
@@ -31,7 +30,7 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 public class DungeonEndBlock extends AbstractActionBlock {
 
     public DungeonEndBlock(BlockVector vector, Dungeon dungeon) {
-        super(vector, dungeon, ActionBlockType.DUNGEON_END, Material.STONE_BUTTON.getId());
+        super(vector, dungeon, ActionBlockType.DUNGEON_END);
         this.setHandleLeftClick();
         this.setHandleRightClick();
     }

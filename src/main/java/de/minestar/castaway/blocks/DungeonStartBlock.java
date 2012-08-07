@@ -18,7 +18,6 @@
 
 package de.minestar.castaway.blocks;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
@@ -31,7 +30,7 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 public class DungeonStartBlock extends AbstractActionBlock {
 
     public DungeonStartBlock(BlockVector vector, Dungeon dungeon) {
-        super(vector, dungeon, ActionBlockType.DUNGEON_START, Material.STONE_PLATE.getId());
+        super(vector, dungeon, ActionBlockType.DUNGEON_START);
         this.setHandlePhysical();
         this.setExecuteIfNotInDungeon();
     }
