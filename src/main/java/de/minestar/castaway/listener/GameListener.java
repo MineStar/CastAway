@@ -222,23 +222,23 @@ public class GameListener implements Listener {
         }
     }
 
+    private void onPlayerDisconnect(Player player) {
+        this.playerData = CastAwayCore.playerManager.getPlayerData(player);
+        if (this.playerData.isInDungeon()) {
+            // exit the dungeon
+            this.playerData.getDungeon().playerQuit(this.playerData);
+            // TP to spawn on next connect
+            MinestarCore.getPlayer(player).setBoolean("main.wasHere", false);
+        }
+    }
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
-        if (this.playerData.isInDungeon()) {
-            this.playerData.quitDungeon();
-            // TP to spawn on next connect
-            MinestarCore.getPlayer(event.getPlayer()).setBoolean("main.wasHere", false);
-        }
+        this.onPlayerDisconnect(event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerKick(PlayerKickEvent event) {
-        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
-        if (this.playerData.isInDungeon()) {
-            this.playerData.quitDungeon();
-            // TP to spawn on next connect
-            MinestarCore.getPlayer(event.getPlayer()).setBoolean("main.wasHere", false);
-        }
+        this.onPlayerDisconnect(event.getPlayer());
     }
 }
