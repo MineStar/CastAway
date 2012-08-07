@@ -18,19 +18,18 @@
 
 package de.minestar.castaway.command;
 
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
-import de.minestar.minestarlibrary.commands.AbstractSuperCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdRespawn extends AbstractSuperCommand {
+public class cmdRespawn extends AbstractCommand {
 
-    public cmdRespawn(String syntax, String arguments, String node, AbstractCommand... subCommands) {
-        super(CastAwayCore.NAME, syntax, arguments, node, subCommands);
+    public cmdRespawn(String syntax, String arguments, String node) {
+        super(CastAwayCore.NAME, syntax, arguments, node);
+        this.description = "Respawn.";
     }
 
     @Override
@@ -45,10 +44,4 @@ public class cmdRespawn extends AbstractSuperCommand {
             player.setHealth(0);
         }
     }
-
-    @Override
-    public void execute(String[] args, ConsoleCommandSender console) {
-        // NOTHING TO DO HERE
-    }
-
 }
