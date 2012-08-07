@@ -20,7 +20,6 @@ package de.minestar.castaway.blocks;
 
 import org.bukkit.entity.Player;
 
-import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
@@ -31,21 +30,21 @@ public class DungeonEndBlock extends AbstractActionBlock {
 
     public DungeonEndBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon, ActionBlockType.DUNGEON_END);
+        this.setHandlePhysical();
         this.setHandleLeftClick();
         this.setHandleRightClick();
+        this.setExecuteIfNotInDungeon();
     }
 
     @Override
     public boolean execute(Player player, PlayerData data) {
         // Player must be in a dungeon
-        if (!data.isInDungeon() || !data.getDungeon().equals(this.dungeon)) {
-            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
-            PlayerUtils.sendInfo(player, "Wende dich an einen Admin falls du es eigentlich bist.");
-            return true;
+        if (data.isInDungeon() && data.getDungeon().equals(this.dungeon)) {
+            this.dungeon.playerFinished(data);
+            return false;
         }
 
-        // execute
-        this.dungeon.playerFinished(data);
+        PlayerUtils.sendInfo(player, "Du bist momentan nicht in einem Dungeon.");
         return false;
     }
 }

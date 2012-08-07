@@ -32,6 +32,8 @@ public class DungeonStartBlock extends AbstractActionBlock {
     public DungeonStartBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon, ActionBlockType.DUNGEON_START);
         this.setHandlePhysical();
+        this.setHandleLeftClick();
+        this.setHandleRightClick();
         this.setExecuteIfNotInDungeon();
     }
 
