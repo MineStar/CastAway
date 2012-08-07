@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -51,6 +52,12 @@ public class RegisterListener implements Listener {
             return;
         }
 
+        // cancel the event
+        event.setCancelled(true);
+        event.setUseInteractedBlock(Event.Result.DENY);
+        event.setUseItemInHand(Event.Result.DENY);
+
+        // handle action
         if (!selection.isSignEdit()) {
             // No HallOfFame-Edit => register block
             Block block = event.getClickedBlock();
