@@ -21,6 +21,7 @@ package de.minestar.castaway.data;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -115,16 +116,59 @@ public class Dungeon {
     }
 
     public void playerFinished(PlayerData playerData) {
+        long time = System.currentTimeMillis() - playerData.getStartTime();
         // get the player
         Player player = playerData.getPlayer();
 
         // send info
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
         PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + this.getName() + "' erfolgreich beendet!");
+        PlayerUtils.sendSuccess(player, "Du hast dafür " + formatTime(time) + " benötigt");
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+
+        // SAVE STATS
+        CastAwayCore.dungeonManager.addWinner(playerData.getDungeon(), playerData.getPlayerName(), time);
 
         // update the player & the data
         this.playerQuit(playerData);
+
+    }
+
+    private String formatTime(long millis) {
+
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        millis -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        millis -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+        millis -= TimeUnit.SECONDS.toMillis(seconds);
+
+        StringBuilder sb = new StringBuilder(50);
+        sb.append(hours);
+        if (hours == 1)
+            sb.append(" Stunde ");
+        else
+            sb.append(" Stunden ");
+
+        sb.append(minutes);
+        if (minutes == 1)
+            sb.append(" Minute ");
+        else
+            sb.append(" Minuten ");
+
+        sb.append(seconds);
+        if (seconds == 1)
+            sb.append(" Sekunde ");
+        else
+            sb.append(" Sekunden ");
+
+        sb.append(millis);
+        if (millis == 1)
+            sb.append(" Millisekunde");
+        else
+            sb.append(" Millisekunden");
+
+        return sb.toString();
     }
 
     public void playerQuit(PlayerData playerData) {

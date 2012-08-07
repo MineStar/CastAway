@@ -26,6 +26,7 @@ public class PlayerData {
     private final String playerName;
     private boolean inDungeon;
     private Dungeon dungeon;
+    private long startTime;
 
     public PlayerData(String playerName) {
         this.playerName = playerName;
@@ -41,6 +42,7 @@ public class PlayerData {
         this.dungeon = dungeon;
         this.inDungeon = true;
         this.updateBukkitPlayer();
+        this.startTime = System.currentTimeMillis();
     }
 
     public void quitDungeon() {
@@ -76,5 +78,9 @@ public class PlayerData {
 
     public Dungeon getDungeon() {
         return this.dungeon;
+    }
+
+    public long getStartTime() {
+        return this.startTime;
     }
 }

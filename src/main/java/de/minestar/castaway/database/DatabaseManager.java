@@ -59,6 +59,12 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         deleteDungeon = con.prepareStatement("DELETE FROM dungeon WHERE id = ?");
 
+        addWinner = con.prepareStatement("INSERT INTO winner ( playerName, dungeon, date ) VALUES ( ?, ?, NOW() )");
+
+        addHighScore = con.prepareStatement("INSERT INTO highscore ( player, dungeon, time, date ) VALUES ( ?, ?, ?, NOW() )");
+
+        isWinner = con.prepareStatement("SELECT 1 FROM winner WHERE dungeon = ? AND playerName = ?");
+
         /* ACTION BLOCKS */
 
         addActionBlock = con.prepareStatement("INSERT INTO actionBlock (dungeon, x, y, z, world, actionType) VALUES (?, ?, ?, ?, ?, ?)");
@@ -75,6 +81,9 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
     private PreparedStatement addDungeon;
     private PreparedStatement deleteDungeon;
+    private PreparedStatement addWinner;
+    private PreparedStatement addHighScore;
+    private PreparedStatement isWinner;
 
     public Map<Integer, Dungeon> loadDungeon() {
 
@@ -138,6 +147,46 @@ public class DatabaseManager extends AbstractMySQLHandler {
             return false;
         }
     }
+
+    public boolean addWinner(Dungeon dungeon, String playerName, long time) {
+        try {
+
+            // PLAYER HAS NEVER BEATEN THIS DUNGEON BEFORE
+            // STORE HIM ONCE IN WINNER TABLE
+            if (!isWinner(dungeon, playerName)) {
+                addWinner.setString(1, playerName);
+                addWinner.setInt(2, dungeon.getID());
+                if (addWinner.executeUpdate() != 1) {
+                    ConsoleUtils.printError(CastAwayCore.NAME, "Can't add a '" + playerName + "' to the winner table!");
+                    return false;
+                }
+            }
+
+            // STORE CURRENT RUN
+            addHighScore.setString(1, playerName);
+            addHighScore.setInt(2, dungeon.getID());
+            addHighScore.setLong(3, time);
+
+            return addHighScore.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't add a the winner '" + playerName + "' for the dungeon = " + dungeon);
+            return false;
+        }
+    }
+
+    public boolean isWinner(Dungeon dungeon, String playerName) {
+        try {
+
+            isWinner.setInt(1, dungeon.getID());
+            isWinner.setString(2, playerName);
+            return isWinner.executeQuery().next();
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't check if '" + playerName + "' is a winner of the dungeon " + dungeon);
+            return false;
+        }
+
+    }
+
     // *********************
     // *** ACTION_BLOCKS ***
     // *********************

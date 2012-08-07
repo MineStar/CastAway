@@ -46,3 +46,15 @@ CREATE  TABLE IF NOT EXISTS `sign` (
   `subID` INT NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `highscore`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `highscore` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `dungeon` INT NOT NULL ,
+  `player` TEXT NOT NULL ,
+  `time` BIGINT NOT NULL ,
+  `date` DATETIME NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;

@@ -82,4 +82,9 @@ public class DungeonManager {
     public boolean exist(String dungeonName) {
         return dungeonNameMap.containsKey(dungeonName.toLowerCase());
     }
+
+    public void addWinner(Dungeon dungeon, String playerName, long time) {
+
+        CastAwayCore.databaseManager.addWinner(dungeon, playerName, time);
+    }
 }
