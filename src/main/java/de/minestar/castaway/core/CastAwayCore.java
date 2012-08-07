@@ -26,6 +26,7 @@ import org.bukkit.plugin.PluginManager;
 import de.minestar.castaway.command.cmdCastAway;
 import de.minestar.castaway.command.cmdCreateDungeon;
 import de.minestar.castaway.command.cmdDeleteDungeon;
+import de.minestar.castaway.command.cmdRespawn;
 import de.minestar.castaway.database.DatabaseManager;
 import de.minestar.castaway.listener.GameListener;
 import de.minestar.castaway.listener.RegisterListener;
@@ -90,9 +91,11 @@ public class CastAwayCore extends AbstractCore {
     @Override
     protected boolean createCommands() {
 
-        // @formatter:off
-        this.cmdList = new CommandList(new cmdCastAway("/castaway", "", "castaway.command", 
-                    
+        // @formatter:off        
+        this.cmdList = new CommandList(
+                new cmdRespawn("/respawn",      "",        "castaway.command.respawn"),
+                
+                new cmdCastAway("/castaway", "", "castaway.command",                 
                     new cmdCreateDungeon("create",      "<DungeonName>",        "castaway.command.createdungeon"),
                     new cmdDeleteDungeon("delete",      "<DungeonName>",        "castaway.command.deletedungeon")
                 )
@@ -100,7 +103,6 @@ public class CastAwayCore extends AbstractCore {
         return true;
         // @formatter:on
     }
-
     @Override
     protected boolean commonDisable() {
         databaseManager.closeConnection();

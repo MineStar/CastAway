@@ -32,6 +32,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.bukkit.gemo.utils.UtilPermissions;
 
@@ -40,6 +42,7 @@ import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.core.Settings;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.PlayerData;
+import de.minestar.core.MinestarCore;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class GameListener implements Listener {
@@ -216,6 +219,28 @@ public class GameListener implements Listener {
         this.playerData = CastAwayCore.playerManager.getPlayerData(((Player) event.getEntity()).getName());
         if (this.playerData.isInDungeon()) {
             this.playerData.quitDungeon();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+        if (this.playerData.isInDungeon()) {
+            this.playerData.quitDungeon();
+
+            // TP to spawn on next connect
+            MinestarCore.getPlayer(event.getPlayer()).setBoolean("main.wasHere", false);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerKick(PlayerKickEvent event) {
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+        if (this.playerData.isInDungeon()) {
+            this.playerData.quitDungeon();
+
+            // TP to spawn on next connect
+            MinestarCore.getPlayer(event.getPlayer()).setBoolean("main.wasHere", false);
         }
     }
 }

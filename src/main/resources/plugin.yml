@@ -6,3 +6,6 @@ commands:
     castaway:
         description: SuperCommandHolder for all subcommands
         usage: /castaway <SubCommand>
+    respawn:
+        description: Quit the dungeon and respawn
+        usage: /respawn
