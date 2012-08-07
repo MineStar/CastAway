@@ -22,9 +22,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
+import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class Dungeon {
 
@@ -33,6 +37,7 @@ public class Dungeon {
     private int ID;
 
     private Map<BlockVector, AbstractActionBlock> registeredBlocks;
+    private Map<String, PlayerData> players;
 
     private final int hash;
 
@@ -41,6 +46,7 @@ public class Dungeon {
         this.name = name;
         this.creator = creator;
         this.registeredBlocks = new HashMap<BlockVector, AbstractActionBlock>();
+        this.players = new HashMap<String, PlayerData>();
 
         this.hash = generateHash();
     }
@@ -85,6 +91,49 @@ public class Dungeon {
 
     public Map<BlockVector, AbstractActionBlock> getRegisteredBlocks() {
         return new HashMap<BlockVector, AbstractActionBlock>(this.registeredBlocks);
+    }
+
+    public void playerJoin(PlayerData playerData) {
+        playerData.joinDungeon(this);
+
+        // get the player
+        Player player = playerData.getPlayer();
+
+        // regain health
+        player.setHealth(20);
+
+        // regain food
+        player.setFoodLevel(20);
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+        PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + this.getName() + "'.");
+        PlayerUtils.sendInfo(player, "Ersteller: " + this.getAuthor());
+        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+
+        this.players.put(playerData.getPlayerName(), playerData);
+    }
+
+    public void playerFinished(PlayerData playerData) {
+        // get the player
+        Player player = playerData.getPlayer();
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+        PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + this.getName() + "' erfolgreich beendet!");
+        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+
+        // update the player & the data
+        this.playerQuit(playerData);
+    }
+
+    public void playerQuit(PlayerData playerData) {
+        playerData.quitDungeon();
+        this.players.remove(playerData.getPlayerName());
+    }
+
+    public Map<String, PlayerData> getPlayers() {
+        return new HashMap<String, PlayerData>(this.players);
     }
 
     @Override

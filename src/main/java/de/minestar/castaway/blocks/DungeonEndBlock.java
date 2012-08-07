@@ -18,7 +18,6 @@
 
 package de.minestar.castaway.blocks;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -47,13 +46,8 @@ public class DungeonEndBlock extends AbstractActionBlock {
             return true;
         }
 
-        // send info
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + data.getDungeon().getName() + "' erfolgreich beendet!");
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-
-        // update the player & the data
-        data.quitDungeon();
+        // execute
+        this.dungeon.playerFinished(data);
         return false;
     }
 }

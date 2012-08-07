@@ -18,7 +18,6 @@
 
 package de.minestar.castaway.blocks;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -47,20 +46,8 @@ public class DungeonStartBlock extends AbstractActionBlock {
             return true;
         }
 
-        // update the player & the data
-        data.updateDungeon(this.dungeon);
-
-        // regain health
-        player.setHealth(20);
-
-        // regain food
-        player.setFoodLevel(20);
-
-        // send info
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendSuccess(player, "Herzlich Willkommen im Dungeon '" + dungeon.getName() + "'.");
-        PlayerUtils.sendInfo(player, "Ersteller: " + dungeon.getAuthor());
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+        // join the dungeon
+        this.dungeon.playerJoin(data);
         return false;
     }
 }

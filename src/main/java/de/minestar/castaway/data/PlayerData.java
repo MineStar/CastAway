@@ -32,7 +32,7 @@ public class PlayerData {
         this.inDungeon = false;
     }
 
-    public void updateDungeon(Dungeon dungeon) {
+    public void joinDungeon(Dungeon dungeon) {
         if (dungeon == null) {
             this.quitDungeon();
             return;
@@ -47,6 +47,10 @@ public class PlayerData {
         this.inDungeon = false;
         this.dungeon = null;
         this.updateBukkitPlayer();
+    }
+
+    public Player getPlayer() {
+        return Bukkit.getPlayerExact(this.playerName);
     }
 
     private void updateBukkitPlayer() {
