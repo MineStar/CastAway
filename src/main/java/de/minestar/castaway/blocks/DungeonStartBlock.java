@@ -40,7 +40,7 @@ public class DungeonStartBlock extends AbstractActionBlock {
     @Override
     public boolean execute(Player player, PlayerData data) {
         // Player must be in normal mode
-        if (data.isInDungeon()) {
+        if (data.isInDungeon() && !data.getDungeon().equals(this.dungeon)) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
             PlayerUtils.sendInfo(player, "Gib /respawn ein um dem Grauen zu entkommen.");
             return true;

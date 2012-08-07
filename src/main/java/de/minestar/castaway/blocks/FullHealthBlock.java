@@ -39,7 +39,7 @@ public class FullHealthBlock extends AbstractActionBlock {
     @Override
     public boolean execute(Player player, PlayerData data) {
         // Player must be in a dungeon
-        if (!data.isInDungeon()) {
+        if (!data.isInDungeon() || !data.getDungeon().equals(this.dungeon)) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
             PlayerUtils.sendInfo(player, "Wende dich an einen Admin falls du es eigentlich bist.");
             return true;
