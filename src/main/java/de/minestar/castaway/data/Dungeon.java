@@ -130,6 +130,23 @@ public class Dungeon {
         return new HashMap<BlockVector, SingleSign>(this.registeredSignsByVector);
     }
 
+    public int getSignCount() {
+        return this.registeredSigns.size();
+    }
+
+    public SingleSign getNextFreeSign() {
+        for (SingleSign inList : this.registeredSigns) {
+            if (!inList.isFilledWithPlayerData()) {
+                return inList;
+            }
+        }
+        return null;
+    }
+
+    public boolean hasFreeSign() {
+        return this.getNextFreeSign() != null;
+    }
+
     // ///////////////////////////////////
     //
     // METHODS FOR PLAYERS

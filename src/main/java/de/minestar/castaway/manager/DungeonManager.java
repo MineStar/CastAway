@@ -26,6 +26,7 @@ import java.util.Map;
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.Dungeon;
+import de.minestar.castaway.data.SingleSign;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class DungeonManager {
@@ -52,9 +53,12 @@ public class DungeonManager {
         // LOAD REGISTERED BLOCKS FROM DATABASE
         StringBuilder sBuilder = new StringBuilder("Loaded Dungeons: ");
         List<AbstractActionBlock> list = null;
+        List<SingleSign> signList = null;
         for (Dungeon dungeon : dungeonIDMap.values()) {
             list = CastAwayCore.databaseManager.loadRegisteredActionBlocks(dungeon);
+            signList = CastAwayCore.databaseManager.loadAllSigns(dungeon);
             dungeon.registerBlocks(list);
+            dungeon.registerSigns(signList);
 
             sBuilder.append(dungeon.getName());
             sBuilder.append('(');
@@ -79,6 +83,7 @@ public class DungeonManager {
         CastAwayCore.gameManager.unRegisterBlocks(dungeon.getRegisteredBlocks().values());
 
         // REMOVE DATA FROM DATABASE
+        CastAwayCore.databaseManager.deleteInheritedSigns(dungeon);
         CastAwayCore.databaseManager.deleteRegisteredBlocks(dungeon);
         CastAwayCore.databaseManager.deleteDungeon(dungeon);
 
