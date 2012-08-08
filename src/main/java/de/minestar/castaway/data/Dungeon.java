@@ -205,23 +205,26 @@ public class Dungeon {
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
 
         // SAVE STATS & update sign if successfull
+        boolean hasAlreadyFinished = CastAwayCore.databaseManager.isWinner(this, playerData.getPlayerName());
         if (CastAwayCore.dungeonManager.addWinner(playerData.getDungeon(), playerData.getPlayerName(), time)) {
-            // update sign
-            SingleSign sign = this.getNextFreeSign();
-            if (sign != null) {
-                String[] lines = new String[4];
-                // place
-                lines[0] = "---> " + this.getPlaceForSign(sign) + " <---";
-                // playername
-                lines[1] = playerData.getPlayerName();
-                // date
-                Date date = new Date();
-                dateFormatter.applyPattern("dd.MM.yyyy");
-                lines[2] = dateFormatter.format(date);
-                // time
-                dateFormatter.applyPattern("HH:mm:ss");
-                lines[3] = dateFormatter.format(date);
-                sign.fillWithInformation(lines);
+            if (!hasAlreadyFinished) {
+                // update sign
+                SingleSign sign = this.getNextFreeSign();
+                if (sign != null) {
+                    String[] lines = new String[4];
+                    // place
+                    lines[0] = "---> " + this.getPlaceForSign(sign) + " <---";
+                    // playername
+                    lines[1] = playerData.getPlayerName();
+                    // date
+                    Date date = new Date();
+                    dateFormatter.applyPattern("dd.MM.yyyy");
+                    lines[2] = dateFormatter.format(date);
+                    // time
+                    dateFormatter.applyPattern("HH:mm:ss");
+                    lines[3] = dateFormatter.format(date);
+                    sign.fillWithInformation(lines);
+                }
             }
         } else {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Aufgrund eines Fehlers konnte deine Zeit nicht gespeichert werden :-(");
