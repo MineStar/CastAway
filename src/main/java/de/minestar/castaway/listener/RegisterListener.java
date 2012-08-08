@@ -20,6 +20,7 @@ package de.minestar.castaway.listener;
 
 import java.lang.reflect.Constructor;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -35,6 +36,7 @@ import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.RegisterSelection;
+import de.minestar.castaway.data.SingleSign;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -67,13 +69,54 @@ public class RegisterListener implements Listener {
 
             selection.getDungeon().registerBlocks(actionBlock);
             CastAwayCore.gameManager.registerSingleBlock(actionBlock);
+            CastAwayCore.playerManager.removeRegisterMode(player.getName());
             PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde registiert.");
+
         } else {
             // HallOfFame-Edit => register / unregister Signs
-            // TODO: implement...
+            Block block = event.getClickedBlock();
+            if (block.getTypeId() != Material.WALL_SIGN.getId()) {
+                PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst auf ein Schild klicken!");
+                CastAwayCore.playerManager.removeRegisterMode(player.getName());
+                return;
+            }
+            BlockVector vector = new BlockVector(block);
+
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                SingleSign tempSign = selection.getDungeon().getSignByVector(vector);
+                if (tempSign == null) {
+                    SingleSign sign = new SingleSign(selection.getDungeon(), vector, block.getData());
+                    if (CastAwayCore.databaseManager.addSign(sign)) {
+                        selection.getDungeon().registerSigns(sign);
+                        int place = selection.getDungeon().getPlaceForSign(sign);
+                        PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Schild wurde registriert! ( Platz: " + place + " )");
+                        String[] lines = new String[4];
+                        lines[0] = "---> " + place + " <---";
+                        lines[1] = lines[2] = lines[3] = "";
+                        sign.fillWithInformation(lines);
+                    } else {
+                        PlayerUtils.sendError(player, CastAwayCore.NAME, "Schild konnte nicht registriert werden!");
+                    }
+                } else {
+                    PlayerUtils.sendError(player, CastAwayCore.NAME, "Dieses Schild ist schon registriert! ( Platz: " + selection.getDungeon().getPlaceForSign(tempSign) + " )");
+                }
+            } else {
+                SingleSign tempSign = selection.getDungeon().getSignByVector(vector);
+                if (tempSign != null) {
+                    SingleSign sign = new SingleSign(selection.getDungeon(), vector, block.getData());
+                    if (CastAwayCore.databaseManager.deleteSingleSign(sign)) {
+                        selection.getDungeon().unRegisterSigns(vector);
+                        block.setTypeId(0, true);
+                        PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Schild wurde entfernt!");
+                    } else {
+                        PlayerUtils.sendError(player, CastAwayCore.NAME, "Schild konnte nicht entfernt werden!");
+                    }
+                } else {
+                    PlayerUtils.sendError(player, CastAwayCore.NAME, "Dieses Schild ist nicht registriert!");
+                }
+            }
         }
     }
-
     private AbstractActionBlock createInstance(ActionBlockType actionBlockType, BlockVector vector, Dungeon dungeon) {
         AbstractActionBlock block = null;
         try {

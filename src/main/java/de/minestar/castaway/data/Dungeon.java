@@ -118,13 +118,13 @@ public class Dungeon {
         for (BlockVector blockPosition : blockPositions) {
             SingleSign sign = this.registeredSignsByVector.remove(blockPosition);
             if (sign != null) {
-                int count = 0;
+                int index = 0;
                 INNER : for (SingleSign inList : this.registeredSigns) {
                     if (sign.equals(inList)) {
-                        this.registeredSigns.remove(count);
+                        this.registeredSigns.remove(index);
                         break INNER;
                     }
-                    ++count;
+                    ++index;
                 }
             }
         }
@@ -132,6 +132,10 @@ public class Dungeon {
 
     public Map<BlockVector, SingleSign> getRegisteredSignsByVector() {
         return new HashMap<BlockVector, SingleSign>(this.registeredSignsByVector);
+    }
+
+    public SingleSign getSignByVector(BlockVector vector) {
+        return this.registeredSignsByVector.get(vector);
     }
 
     public int getSignCount() {
@@ -227,6 +231,7 @@ public class Dungeon {
         // update the player & the data
         this.playerQuit(playerData);
     }
+
     public void playerQuit(PlayerData playerData) {
         playerData.quitDungeon();
         this.players.remove(playerData.getPlayerName());

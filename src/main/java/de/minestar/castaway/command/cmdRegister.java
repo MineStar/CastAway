@@ -60,7 +60,14 @@ public class cmdRegister extends AbstractCommand {
             return;
         }
 
-        CastAwayCore.playerManager.addRegisterMode(player.getName(), new RegisterSelection(actionBlockType, dungeon));
-        PlayerUtils.sendSuccess(player, pluginName, "Klicke auf einen Block um diesen zu registieren!");
+        if (actionBlockType != ActionBlockType.HALL_OF_FAME_SIGN) {
+            CastAwayCore.playerManager.addRegisterMode(player.getName(), new RegisterSelection(actionBlockType, dungeon));
+            PlayerUtils.sendSuccess(player, pluginName, "Klicke auf einen Block um diesen zu registieren!");
+        } else {
+            CastAwayCore.playerManager.addRegisterMode(player.getName(), new RegisterSelection(dungeon));
+            PlayerUtils.sendSuccess(player, pluginName, "Klicke auf Schilder um diese zu registieren!");
+            PlayerUtils.sendInfo(player, "Linksklick: hinzufügen");
+            PlayerUtils.sendInfo(player, "Rechtsklick: entfernen");
+        }
     }
 }

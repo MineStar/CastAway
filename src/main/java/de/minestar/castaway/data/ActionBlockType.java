@@ -25,8 +25,11 @@ import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.blocks.DungeonStartBlock;
 import de.minestar.castaway.blocks.FullHealthBlock;
+import de.minestar.castaway.blocks.SignBlock;
 
 public enum ActionBlockType {
+
+    HALL_OF_FAME_SIGN(-1, SignBlock.class, "WALL"),
 
     DUNGEON_START(0, DungeonStartBlock.class, "START"),
 

@@ -83,6 +83,6 @@ public class PlayerManager {
     }
 
     public RegisterSelection getBlockTypeToRegister(String playerName) {
-        return this.registerBlockMap.remove(playerName);
+        return this.registerBlockMap.get(playerName);
     }
 }
