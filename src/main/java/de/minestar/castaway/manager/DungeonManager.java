@@ -75,7 +75,7 @@ public class DungeonManager {
         Dungeon dungeon = new Dungeon(dungeonName, creatorName);
         CastAwayCore.databaseManager.addDungeon(dungeon);
         this.dungeonIDMap.put(dungeon.getID(), dungeon);
-        this.dungeonNameMap.put(dungeon.getName(), dungeon);
+        this.dungeonNameMap.put(dungeon.getName().toLowerCase(), dungeon);
     }
 
     public void deleteDungeon(Dungeon dungeon) {
