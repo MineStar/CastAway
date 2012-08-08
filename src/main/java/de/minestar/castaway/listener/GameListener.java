@@ -23,6 +23,7 @@ import java.util.HashSet;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -161,21 +162,6 @@ public class GameListener implements Listener {
                 cancelEvent = block.execute(event.getPlayer(), this.playerData);
                 break;
             }
-//            case PHYSICAL : {
-//                // handle physical action
-//                if (!block.isHandlePhysical()) {
-//                    break;
-//                }
-//
-//                // we need a plate
-//                if (event.getClickedBlock().getTypeId() != Material.STONE_PLATE.getId() && event.getClickedBlock().getTypeId() != Material.WOOD_PLATE.getId()) {
-//                    break;
-//                }
-//
-//                // if we have a registered block -> handle the action
-//                cancelEvent = block.execute(event.getPlayer(), this.playerData);
-//                break;
-//            }
             default : {
                 // do nothing :{
                 break;
@@ -262,13 +248,13 @@ public class GameListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent event) {
         this.playerData = CastAwayCore.playerManager.getPlayerData(((Player) event.getEntity()).getName());
         if (this.playerData.isInDungeon()) {
             event.setDeathMessage("");
             event.setKeepLevel(true);
-            
+
             // FIRE
             this.playerData.quitDungeon();
         }

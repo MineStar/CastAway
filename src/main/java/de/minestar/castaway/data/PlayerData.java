@@ -62,6 +62,10 @@ public class PlayerData {
                 player.setAllowFlight(false);
                 player.setGameMode(GameMode.ADVENTURE);
                 player.getInventory().clear();
+                player.getInventory().setBoots(null);
+                player.getInventory().setChestplate(null);
+                player.getInventory().setHelmet(null);
+                player.getInventory().setLeggings(null);
             } else {
                 player.setGameMode(GameMode.SURVIVAL);
             }
