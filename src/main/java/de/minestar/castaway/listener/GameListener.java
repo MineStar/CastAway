@@ -268,6 +268,8 @@ public class GameListener implements Listener {
         if (this.playerData.isInDungeon()) {
             event.setDeathMessage("");
             event.setKeepLevel(true);
+            
+            // FIRE
             this.playerData.quitDungeon();
         }
     }

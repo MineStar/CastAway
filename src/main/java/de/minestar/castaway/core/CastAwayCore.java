@@ -34,9 +34,15 @@ import de.minestar.castaway.listener.RegisterListener;
 import de.minestar.castaway.manager.DungeonManager;
 import de.minestar.castaway.manager.GameManager;
 import de.minestar.castaway.manager.PlayerManager;
+import de.minestar.castaway.stats.BeginDungeonStat;
+import de.minestar.castaway.stats.DeathInDungeonStat;
+import de.minestar.castaway.stats.FinishDungeonStat;
 import de.minestar.minestarlibrary.AbstractCore;
+import de.minestar.minestarlibrary.annotations.UseStatistic;
 import de.minestar.minestarlibrary.commands.CommandList;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 
+@UseStatistic
 public class CastAwayCore extends AbstractCore {
 
     public static final String NAME = "CastAway";
@@ -105,6 +111,17 @@ public class CastAwayCore extends AbstractCore {
         return true;
         // @formatter:on
     }
+
+    @Override
+    protected boolean registerStatistics() {
+
+        StatisticHandler.registerStatistic(BeginDungeonStat.class);
+        StatisticHandler.registerStatistic(FinishDungeonStat.class);
+        StatisticHandler.registerStatistic(DeathInDungeonStat.class);
+
+        return true;
+    }
+
     @Override
     protected boolean commonDisable() {
         if (databaseManager.hasConnection()) {

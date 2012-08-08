@@ -32,6 +32,10 @@ import org.bukkit.entity.Player;
 
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
+import de.minestar.castaway.stats.BeginDungeonStat;
+import de.minestar.castaway.stats.DeathInDungeonStat;
+import de.minestar.castaway.stats.FinishDungeonStat;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -190,6 +194,9 @@ public class Dungeon {
         PlayerUtils.sendInfo(player, "Ersteller: " + this.getAuthor());
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
 
+        // HANDLE STATISTIC
+        StatisticHandler.handleStatistic(new BeginDungeonStat(playerData.getPlayerName(), ID));
+
         this.players.put(playerData.getPlayerName(), playerData);
     }
 
@@ -231,12 +238,19 @@ public class Dungeon {
             PlayerUtils.sendInfo(player, "Bitte wende dich an einen Admin.");
         }
 
+        // HANDLE STATISTIC
+        StatisticHandler.handleStatistic(new FinishDungeonStat(playerData.getPlayerName(), ID));
+
         // update the player & the data
         this.playerQuit(playerData);
     }
 
     public void playerQuit(PlayerData playerData) {
         playerData.quitDungeon();
+
+        // HANDLE STATISTIC
+        StatisticHandler.handleStatistic(new DeathInDungeonStat(playerData.getPlayerName(), ID));
+
         this.players.remove(playerData.getPlayerName());
     }
 
