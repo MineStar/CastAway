@@ -219,7 +219,7 @@ public class Dungeon {
                 dateFormatter.applyPattern("dd.MM.yyyy");
                 lines[2] = dateFormatter.format(date);
                 // time
-                dateFormatter.applyPattern("hh:mm:ss");
+                dateFormatter.applyPattern("HH:mm:ss");
                 lines[3] = dateFormatter.format(date);
                 sign.fillWithInformation(lines);
             }

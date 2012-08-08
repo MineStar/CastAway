@@ -87,6 +87,7 @@ public class SingleSign {
                 text = text.substring(0, 15);
             }
             sign.setLine(line, text);
+            sign.update(true);
         }
         return true;
     }
