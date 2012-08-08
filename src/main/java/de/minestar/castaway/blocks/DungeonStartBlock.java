@@ -48,6 +48,7 @@ public class DungeonStartBlock extends AbstractActionBlock {
             PlayerUtils.sendInfo(player, "Versuche es in wenigen Sekunden nochmal.");
             return true;
         }
+        this.lastStartTime = currentTime;
 
         // Player must be in normal mode
         if (data.isInDungeon() && !data.getDungeon().equals(this.dungeon)) {
