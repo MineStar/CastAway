@@ -37,6 +37,7 @@ import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
+import de.minestar.castaway.data.SingleSign;
 import de.minestar.castaway.data.Winner;
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
@@ -57,6 +58,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
     protected void createStatements(String pluginName, Connection con) throws Exception {
 
         /* DUNGEON */
+
         addDungeon = con.prepareStatement("INSERT INTO dungeon (name, creator) VALUES (?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         deleteDungeon = con.prepareStatement("DELETE FROM dungeon WHERE id = ?");
@@ -77,6 +79,15 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         deleteRegisteredBlocks = con.prepareStatement("DELETE FROM actionBlock WHERE dungeon = ?");
 
+        /* SIGNS */
+
+        addSign = con.prepareStatement("INSERT INTO sign (dungeon, x, y, z, world, subID) VALUES (?, ?, ?, ?, ?, ?)");
+
+        loadSigns = con.prepareStatement("SELECT * FROM sign WHERE dungeon = ?");
+
+        deleteSingleSign = con.prepareStatement("DELETE FROM sign WHERE dungeon = ? AND x = ? AND y = ? AND z = ? AND world = ?");
+
+        deleteInheritedSigns = con.prepareStatement("DELETE FROM sign WHERE dungeon = ?");
     }
 
     // ***************
@@ -291,7 +302,6 @@ public class DatabaseManager extends AbstractMySQLHandler {
     }
 
     public boolean addActionBlock(AbstractActionBlock actionBlock) {
-
         try {
             addActionBlock.setInt(1, actionBlock.getDungeon().getID());
             addActionBlock.setInt(2, actionBlock.getVector().getX());
@@ -299,7 +309,6 @@ public class DatabaseManager extends AbstractMySQLHandler {
             addActionBlock.setInt(4, actionBlock.getVector().getZ());
             addActionBlock.setString(5, actionBlock.getVector().getWorldName());
             addActionBlock.setInt(6, actionBlock.getBlockType().getID());
-
             return addActionBlock.executeUpdate() == 1;
         } catch (Exception e) {
             ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't add action block to database! ActionBlock = " + actionBlock);
@@ -308,12 +317,12 @@ public class DatabaseManager extends AbstractMySQLHandler {
     }
 
     public boolean deleteSingleRegisteredBlock(AbstractActionBlock actionBlock) {
-        // DELETE FROM actionBlock WHERE dungeon = ? AND y = ? AND x = ? AND z =
+        // DELETE FROM actionBlock WHERE dungeon = ? AND x = ? AND y = ? AND z =
         // ? AND world = ?
         try {
             deleteSingleRegisteredBlock.setInt(1, actionBlock.getDungeon().getID());
-            deleteSingleRegisteredBlock.setInt(2, actionBlock.getVector().getY());
-            deleteSingleRegisteredBlock.setInt(3, actionBlock.getVector().getX());
+            deleteSingleRegisteredBlock.setInt(2, actionBlock.getVector().getX());
+            deleteSingleRegisteredBlock.setInt(3, actionBlock.getVector().getY());
             deleteSingleRegisteredBlock.setInt(4, actionBlock.getVector().getZ());
             deleteSingleRegisteredBlock.setString(5, actionBlock.getVector().getWorldName());
 
@@ -331,6 +340,96 @@ public class DatabaseManager extends AbstractMySQLHandler {
             return deleteRegisteredBlocks.executeUpdate() >= 0;
         } catch (Exception e) {
             ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't delete registered blocks from database! Dungeon = " + dungeon);
+            return false;
+        }
+    }
+
+    // *********************
+    // *** SIGNS ***
+    // *********************
+
+    private PreparedStatement loadSigns;
+    private PreparedStatement addSign;
+    private PreparedStatement deleteSingleSign;
+    private PreparedStatement deleteInheritedSigns;
+
+    public List<SingleSign> loadAllSigns(Dungeon dungeon) {
+        List<SingleSign> signList = new LinkedList<SingleSign>();
+        try {
+            this.loadSigns.setInt(1, dungeon.getID());
+            ResultSet resultSet = this.loadSigns.executeQuery();
+
+            // TEMP VARS
+            int x;
+            int y;
+            int z;
+            String world;
+            byte subID;
+            SingleSign sign;
+            BlockVector bVector;
+            while (resultSet != null && resultSet.next()) {
+                // GET VALUES
+                x = resultSet.getInt("x");
+                y = resultSet.getInt("y");
+                z = resultSet.getInt("z");
+                world = resultSet.getString("world");
+                subID = resultSet.getByte("subID");
+
+                // CHECK IF WORLD EXISTS
+                if (Bukkit.getWorld(world) == null) {
+                    ConsoleUtils.printWarning(CastAwayCore.NAME, "The world '" + world + "' was not found!");
+                    continue;
+                }
+
+                bVector = new BlockVector(world, x, y, z);
+                sign = new SingleSign(dungeon, bVector, subID);
+                signList.add(sign);
+            }
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't load signs from database for dungeon = " + dungeon);
+            signList.clear();
+        }
+        return signList;
+    }
+
+    public boolean addSign(SingleSign sign) {
+        try {
+            addSign.setInt(1, sign.getDungeon().getID());
+            addSign.setInt(2, sign.getVector().getX());
+            addSign.setInt(3, sign.getVector().getY());
+            addSign.setInt(4, sign.getVector().getZ());
+            addSign.setString(5, sign.getVector().getWorldName());
+            addSign.setInt(6, sign.getSubData());
+            return addSign.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't add sign to database! Sign = " + sign);
+            return false;
+        }
+    }
+
+    public boolean deleteSingleSign(SingleSign sign) {
+        // DELETE FROM sign WHERE dungeon = ? AND x = ? AND y = ? AND z =
+        // ? AND world = ?
+        try {
+            deleteSingleSign.setInt(1, sign.getDungeon().getID());
+            deleteSingleSign.setInt(2, sign.getVector().getX());
+            deleteSingleSign.setInt(3, sign.getVector().getY());
+            deleteSingleSign.setInt(4, sign.getVector().getZ());
+            deleteSingleSign.setString(5, sign.getVector().getWorldName());
+
+            return deleteSingleSign.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't delete single sign from database! Sign =" + sign);
+            return false;
+        }
+    }
+
+    public boolean deleteInheritedSigns(Dungeon dungeon) {
+        try {
+            deleteInheritedSigns.setInt(1, dungeon.getID());
+            return deleteInheritedSigns.executeUpdate() >= 0;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't delete inherited signs from database! Dungeon = " + dungeon);
             return false;
         }
     }

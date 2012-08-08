@@ -24,13 +24,18 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 public class SingleSign {
+    private final Dungeon dungeon;
     private final BlockVector vector;
     private final byte subData;
 
-    public SingleSign(BlockVector vector, byte subData) {
-        super();
+    public SingleSign(Dungeon dungeon, BlockVector vector, byte subData) {
+        this.dungeon = dungeon;
         this.vector = vector;
         this.subData = subData;
+    }
+
+    public Dungeon getDungeon() {
+        return dungeon;
     }
 
     public byte getSubData() {
@@ -85,4 +90,10 @@ public class SingleSign {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "SingleSign = { " + this.dungeon + " , " + this.vector + ", SubData=" + this.subData + " }";
+    }
+
 }
