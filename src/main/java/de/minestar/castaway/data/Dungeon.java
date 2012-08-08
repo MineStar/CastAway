@@ -37,7 +37,7 @@ public class Dungeon {
     private final String name;
     private int ID;
 
-    private Map<BlockVector, AbstractActionBlock> registeredSigns;
+    private Map<BlockVector, SingleSign> registeredSigns;
     private Map<BlockVector, AbstractActionBlock> registeredBlocks;
     private Map<String, PlayerData> players;
 
@@ -48,7 +48,7 @@ public class Dungeon {
         this.name = name;
         this.creator = creator;
         this.registeredBlocks = new HashMap<BlockVector, AbstractActionBlock>();
-        this.registeredSigns = new HashMap<BlockVector, AbstractActionBlock>();
+        this.registeredSigns = new HashMap<BlockVector, SingleSign>();
         this.players = new HashMap<String, PlayerData>();
         this.hash = generateHash();
     }
@@ -57,24 +57,11 @@ public class Dungeon {
         this(0, name, creator);
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAuthor() {
-        return creator;
-    }
-
-    public void setID(int ID) {
-        if (this.ID == 0)
-            this.ID = ID;
-        else
-            ConsoleUtils.printError(CastAwayCore.NAME, "The dungeon " + this.toString() + " has already an database ID!");
-    }
+    // ///////////////////////////////////
+    //
+    // ACTIONBLOCKS
+    //
+    // ///////////////////////////////////
 
     public void registerBlocks(AbstractActionBlock... blocks) {
         for (AbstractActionBlock block : blocks)
@@ -95,13 +82,19 @@ public class Dungeon {
         return new HashMap<BlockVector, AbstractActionBlock>(this.registeredBlocks);
     }
 
-    public void registerSigns(AbstractActionBlock... signs) {
-        for (AbstractActionBlock sign : signs)
+    // ///////////////////////////////////
+    //
+    // SIGNS
+    //
+    // ///////////////////////////////////
+
+    public void registerSigns(SingleSign... signs) {
+        for (SingleSign sign : signs)
             this.registeredSigns.put(sign.getVector(), sign);
     }
 
-    public void registerSigns(Collection<AbstractActionBlock> signs) {
-        for (AbstractActionBlock sign : signs)
+    public void registerSigns(Collection<SingleSign> signs) {
+        for (SingleSign sign : signs)
             this.registeredSigns.put(sign.getVector(), sign);
     }
 
@@ -110,9 +103,15 @@ public class Dungeon {
             this.registeredSigns.remove(blockPosition);
     }
 
-    public Map<BlockVector, AbstractActionBlock> getRegisteredSigns() {
-        return new HashMap<BlockVector, AbstractActionBlock>(this.registeredSigns);
+    public Map<BlockVector, SingleSign> getRegisteredSigns() {
+        return new HashMap<BlockVector, SingleSign>(this.registeredSigns);
     }
+
+    // ///////////////////////////////////
+    //
+    // METHODS FOR PLAYERS
+    //
+    // ///////////////////////////////////
 
     public void playerJoin(PlayerData playerData) {
         playerData.joinDungeon(this);
@@ -154,8 +153,18 @@ public class Dungeon {
 
     }
 
-    private String formatTime(long millis) {
+    public void playerQuit(PlayerData playerData) {
+        playerData.quitDungeon();
+        this.players.remove(playerData.getPlayerName());
+    }
 
+    // ///////////////////////////////////
+    //
+    // MISC-METHODS
+    //
+    // ///////////////////////////////////
+
+    private String formatTime(long millis) {
         long hours = TimeUnit.MILLISECONDS.toHours(millis);
         millis -= TimeUnit.HOURS.toMillis(hours);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
@@ -191,9 +200,29 @@ public class Dungeon {
         return sb.toString();
     }
 
-    public void playerQuit(PlayerData playerData) {
-        playerData.quitDungeon();
-        this.players.remove(playerData.getPlayerName());
+    // ///////////////////////////////////
+    //
+    // FOR THE DUNGEON ITSELF
+    //
+    // ///////////////////////////////////
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAuthor() {
+        return creator;
+    }
+
+    public void setID(int ID) {
+        if (this.ID == 0)
+            this.ID = ID;
+        else
+            ConsoleUtils.printError(CastAwayCore.NAME, "The dungeon " + this.toString() + " has already an database ID!");
     }
 
     public Map<String, PlayerData> getPlayers() {
