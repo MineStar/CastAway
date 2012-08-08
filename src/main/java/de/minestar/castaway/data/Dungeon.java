@@ -37,6 +37,7 @@ public class Dungeon {
     private final String name;
     private int ID;
 
+    private Map<BlockVector, SingleSign> registeredSigns;
     private Map<BlockVector, AbstractActionBlock> registeredBlocks;
     private Map<String, PlayerData> players;
 
@@ -47,8 +48,8 @@ public class Dungeon {
         this.name = name;
         this.creator = creator;
         this.registeredBlocks = new HashMap<BlockVector, AbstractActionBlock>();
+        this.registeredSigns = new HashMap<BlockVector, SingleSign>();
         this.players = new HashMap<String, PlayerData>();
-
         this.hash = generateHash();
     }
 
@@ -92,6 +93,25 @@ public class Dungeon {
 
     public Map<BlockVector, AbstractActionBlock> getRegisteredBlocks() {
         return new HashMap<BlockVector, AbstractActionBlock>(this.registeredBlocks);
+    }
+
+    public void registerSigns(SingleSign... signs) {
+        for (SingleSign sign : signs)
+            this.registeredSigns.put(sign.getVector(), sign);
+    }
+
+    public void registerSigns(Collection<SingleSign> signs) {
+        for (SingleSign sign : signs)
+            this.registeredSigns.put(sign.getVector(), sign);
+    }
+
+    public void unRegisterSigns(BlockVector... blockPositions) {
+        for (BlockVector blockPosition : blockPositions)
+            this.registeredSigns.remove(blockPosition);
+    }
+
+    public Map<BlockVector, SingleSign> getRegisteredSigns() {
+        return new HashMap<BlockVector, SingleSign>(this.registeredSigns);
     }
 
     public void playerJoin(PlayerData playerData) {
