@@ -24,6 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
+import de.minestar.castaway.data.Winner;
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -65,6 +67,8 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         isWinner = con.prepareStatement("SELECT 1 FROM winner WHERE dungeon = ? AND playerName = ?");
 
+        getWinner = con.prepareStatement("SELECT playerName, date FROM winner WHERE dungeon = ? ORDER BY date ASC LIMIT ?");
+
         /* ACTION BLOCKS */
 
         addActionBlock = con.prepareStatement("INSERT INTO actionBlock (dungeon, x, y, z, world, actionType) VALUES (?, ?, ?, ?, ?, ?)");
@@ -84,6 +88,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
     private PreparedStatement addWinner;
     private PreparedStatement addHighScore;
     private PreparedStatement isWinner;
+    private PreparedStatement getWinner;
 
     public Map<Integer, Dungeon> loadDungeon() {
 
@@ -185,6 +190,37 @@ public class DatabaseManager extends AbstractMySQLHandler {
             return false;
         }
 
+    }
+
+    public List<Winner> getWinner(Dungeon dungeon, int topX) {
+        List<Winner> winnerList = new LinkedList<Winner>();
+
+        try {
+            // FILL QUERY
+            getWinner.setInt(1, dungeon.getID());
+            getWinner.setInt(2, topX);
+
+            // EXECUTE QUERY
+            ResultSet rs = getWinner.executeQuery();
+
+            String playerName;
+            Timestamp date;
+            int position = 1;
+            while (rs.next()) {
+                // GET VALUES
+                playerName = rs.getString(1);
+                date = rs.getTimestamp(2);
+
+                // CREATE NEW WINNER
+                winnerList.add(new Winner(playerName, date.getTime(), position++, dungeon));
+            }
+
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't load the " + topX + " winner of dungeon " + dungeon + "!");
+            winnerList.clear();
+        }
+
+        return winnerList;
     }
 
     // *********************
