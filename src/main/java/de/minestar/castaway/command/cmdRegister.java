@@ -43,21 +43,24 @@ public class cmdRegister extends AbstractCommand {
             return;
         }
 
-        int actionTypeID = 0;
+        // SEARCH FOR KIND OF ACTION BLOCK
+        String actionTypeName = args[1];
+        ActionBlockType actionBlockType;
         try {
-            actionTypeID = Integer.parseInt(args[1]);
+            // TRY ID FIRST
+            actionBlockType = ActionBlockType.get(Integer.parseInt(actionTypeName));
         } catch (Exception e) {
-            PlayerUtils.sendError(player, pluginName, args[1] + " ist keine Zahl");
-            return;
+            // IS NO NUMBER - TRY NAME
+            actionBlockType = ActionBlockType.get(actionTypeName);
         }
 
-        ActionBlockType actionblockType = ActionBlockType.byID(actionTypeID);
-        if (actionblockType == null) {
+        // ID NOR NAME WORKS
+        if (actionBlockType == null) {
             PlayerUtils.sendSuccess(player, pluginName, "Unbekannter ActionBlockTyp!");
             return;
         }
 
-        CastAwayCore.playerManager.addRegisterMode(player.getName(), new RegisterSelection(actionblockType, dungeon));
+        CastAwayCore.playerManager.addRegisterMode(player.getName(), new RegisterSelection(actionBlockType, dungeon));
         PlayerUtils.sendSuccess(player, pluginName, "Klicke auf einen Block um diesen zu registieren!");
     }
 }

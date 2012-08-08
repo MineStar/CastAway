@@ -39,11 +39,14 @@ public enum ActionBlockType {
     private final String commandName;
 
     private static Map<Integer, ActionBlockType> mapByID;
+    private static Map<String, ActionBlockType> mapByCommand;
 
     static {
         mapByID = new HashMap<Integer, ActionBlockType>();
+        mapByCommand = new HashMap<String, ActionBlockType>();
         for (ActionBlockType b : ActionBlockType.values()) {
             mapByID.put(b.ID, b);
+            mapByCommand.put(b.commandName.toLowerCase(), b);
         }
     }
 
@@ -65,15 +68,11 @@ public enum ActionBlockType {
         return commandName;
     }
 
-    public static ActionBlockType byCommandName(String text) {
-        for (ActionBlockType type : ActionBlockType.values()) {
-            if (type.getCommandName().equalsIgnoreCase(text))
-                return type;
-        }
-        return null;
+    public static ActionBlockType get(int ID) {
+        return mapByID.get(ID);
     }
 
-    public static ActionBlockType byID(int ID) {
-        return mapByID.get(ID);
+    public static ActionBlockType get(String commandName) {
+        return mapByCommand.get(commandName);
     }
 }

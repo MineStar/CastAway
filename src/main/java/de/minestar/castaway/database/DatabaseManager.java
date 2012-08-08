@@ -233,7 +233,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
                 actionType = rs.getInt(7);
 
                 // GET CLASS FOR THE ACTION TYPE
-                clazz = ActionBlockType.byID(actionType).getClazz();
+                clazz = ActionBlockType.get(actionType).getClazz();
                 if (clazz == null) {
                     ConsoleUtils.printWarning(CastAwayCore.NAME, "Unknown action type id '" + actionType + "'!");
                     continue;
