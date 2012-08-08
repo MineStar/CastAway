@@ -45,12 +45,12 @@ public class DungeonStartBlock extends AbstractActionBlock {
             return false;
         } else {
             // player is in different dungeon => cancel & send message
-            if (!data.getDungeon().equals(this.dungeon)) {
-                PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
-                PlayerUtils.sendInfo(player, "Gib /respawn ein um dem Grauen zu entkommen.");
-                return true;
+            if (data.getDungeon().equals(this.dungeon)) {
+                return false;
             }
-            return false;
+            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
+            PlayerUtils.sendInfo(player, "Gib /respawn ein um dem Grauen zu entkommen.");
+            return true;
         }
 
     }

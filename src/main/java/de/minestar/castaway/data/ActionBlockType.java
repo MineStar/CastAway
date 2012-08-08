@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.minestar.castaway.blocks.AbstractActionBlock;
-import de.minestar.castaway.blocks.DungeonCheckBlock;
 import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.blocks.DungeonStartBlock;
 import de.minestar.castaway.blocks.FullHealthBlock;
@@ -36,9 +35,7 @@ public enum ActionBlockType {
 
     DUNGEON_END(1, DungeonEndBlock.class, "END"),
 
-    SPECIAL_HEALTH_FULL(2, FullHealthBlock.class, "FULL_HEALTH"),
-
-    DUNGEON_CHECK(3, DungeonCheckBlock.class, "CHECK");
+    SPECIAL_HEALTH_FULL(2, FullHealthBlock.class, "FULL_HEALTH");
 
     private final int ID;
     private final Class<? extends AbstractActionBlock> clazz;

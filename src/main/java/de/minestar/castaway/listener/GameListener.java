@@ -20,7 +20,6 @@ package de.minestar.castaway.listener;
 
 import java.util.HashSet;
 
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,8 +32,10 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.bukkit.gemo.utils.BlockUtils;
 import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.castaway.blocks.AbstractActionBlock;
@@ -123,7 +124,7 @@ public class GameListener implements Listener {
         this.vector.update(event.getClickedBlock());
 
         // is the block registered?
-        AbstractActionBlock block = CastAwayCore.gameManager.getBlock(vector);
+        AbstractActionBlock block = CastAwayCore.gameManager.getBlock(this.vector);
         if (block == null) {
             return;
         }
@@ -160,21 +161,21 @@ public class GameListener implements Listener {
                 cancelEvent = block.execute(event.getPlayer(), this.playerData);
                 break;
             }
-            case PHYSICAL : {
-                // handle physical action
-                if (!block.isHandlePhysical()) {
-                    break;
-                }
-
-                // we need a plate
-                if (event.getClickedBlock().getTypeId() != Material.STONE_PLATE.getId() && event.getClickedBlock().getTypeId() != Material.WOOD_PLATE.getId()) {
-                    break;
-                }
-
-                // if we have a registered block -> handle the action
-                cancelEvent = block.execute(event.getPlayer(), this.playerData);
-                break;
-            }
+//            case PHYSICAL : {
+//                // handle physical action
+//                if (!block.isHandlePhysical()) {
+//                    break;
+//                }
+//
+//                // we need a plate
+//                if (event.getClickedBlock().getTypeId() != Material.STONE_PLATE.getId() && event.getClickedBlock().getTypeId() != Material.WOOD_PLATE.getId()) {
+//                    break;
+//                }
+//
+//                // if we have a registered block -> handle the action
+//                cancelEvent = block.execute(event.getPlayer(), this.playerData);
+//                break;
+//            }
             default : {
                 // do nothing :{
                 break;
@@ -186,6 +187,7 @@ public class GameListener implements Listener {
             event.setCancelled(true);
         }
     }
+
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         // only handle players
@@ -212,6 +214,51 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        // only on blockchange
+        if (BlockUtils.LocationEquals(event.getFrom(), event.getTo())) {
+            return;
+        }
+
+        // update BlockVector
+        this.vector.update(event.getTo().getBlock());
+
+        // is the block registered?
+        AbstractActionBlock block = CastAwayCore.gameManager.getBlock(this.vector);
+        if (block == null) {
+            return;
+        }
+
+        // Player must be in DungeonMode, if the block wishes it
+        if (!block.isExecuteIfNotInDungeon() && !this.playerData.isInDungeon()) {
+            return;
+        }
+
+        // handle physical action
+        if (!block.isHandlePhysical()) {
+            return;
+        }
+
+        // does the player have permissions to use dungeons?
+        if (!UtilPermissions.playerCanUseCommand(event.getPlayer(), "castaway.dungeons.use")) {
+            PlayerUtils.sendError(event.getPlayer(), CastAwayCore.NAME, "Du darfst Dungeons nicht benutzen!");
+            event.setTo(event.getFrom().clone());
+            event.setCancelled(true);
+            return;
+        }
+
+        // get PlayerData
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+
+        // if we have a registered block -> handle the action
+        boolean cancelEvent = block.execute(event.getPlayer(), this.playerData);
+        if (cancelEvent) {
+            event.setTo(event.getFrom().clone());
+            event.setCancelled(true);
         }
     }
 
