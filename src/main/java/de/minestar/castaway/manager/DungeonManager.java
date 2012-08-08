@@ -108,8 +108,7 @@ public class DungeonManager {
         return dungeonNameMap.containsKey(dungeonName.toLowerCase());
     }
 
-    public void addWinner(Dungeon dungeon, String playerName, long time) {
-
-        CastAwayCore.databaseManager.addWinner(dungeon, playerName, time);
+    public boolean addWinner(Dungeon dungeon, String playerName, long time) {
+        return CastAwayCore.databaseManager.addWinner(dungeon, playerName, time);
     }
 }

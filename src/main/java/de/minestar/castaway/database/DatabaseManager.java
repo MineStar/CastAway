@@ -192,7 +192,6 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
     public boolean isWinner(Dungeon dungeon, String playerName) {
         try {
-
             isWinner.setInt(1, dungeon.getID());
             isWinner.setString(2, playerName);
             return isWinner.executeQuery().next();
@@ -200,7 +199,6 @@ public class DatabaseManager extends AbstractMySQLHandler {
             ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't check if '" + playerName + "' is a winner of the dungeon " + dungeon);
             return false;
         }
-
     }
 
     public List<Winner> getWinner(Dungeon dungeon, int topX) {

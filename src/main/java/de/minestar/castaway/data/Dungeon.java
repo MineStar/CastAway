@@ -18,8 +18,10 @@
 
 package de.minestar.castaway.data;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,8 @@ import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class Dungeon {
+
+    private static SimpleDateFormat dateFormatter = new SimpleDateFormat();
 
     private final String creator;
     private final String name;
@@ -134,6 +138,17 @@ public class Dungeon {
         return this.registeredSigns.size();
     }
 
+    public int getPlaceForSign(SingleSign sign) {
+        int count = 1;
+        for (SingleSign inList : this.registeredSigns) {
+            if (inList.equals(sign)) {
+                return count;
+            }
+            ++count;
+        }
+        return count;
+    }
+
     public SingleSign getNextFreeSign() {
         for (SingleSign inList : this.registeredSigns) {
             if (!inList.isFilledWithPlayerData()) {
@@ -185,14 +200,33 @@ public class Dungeon {
         PlayerUtils.sendSuccess(player, "Du hast dafür " + formatTime(time) + " benötigt");
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
 
-        // SAVE STATS
-        CastAwayCore.dungeonManager.addWinner(playerData.getDungeon(), playerData.getPlayerName(), time);
+        // SAVE STATS & update sign if successfull
+        if (CastAwayCore.dungeonManager.addWinner(playerData.getDungeon(), playerData.getPlayerName(), time)) {
+            // update sign
+            SingleSign sign = this.getNextFreeSign();
+            if (sign != null) {
+                String[] lines = new String[4];
+                // place
+                lines[0] = "---> " + this.getPlaceForSign(sign) + " <---";
+                // playername
+                lines[1] = playerData.getPlayerName();
+                // date
+                Date date = new Date();
+                dateFormatter.applyPattern("dd.MM.yyyy");
+                lines[2] = dateFormatter.format(date);
+                // time
+                dateFormatter.applyPattern("hh:mm:ss");
+                lines[3] = dateFormatter.format(date);
+                sign.fillWithInformation(lines);
+            }
+        } else {
+            PlayerUtils.sendError(player, CastAwayCore.NAME, "Aufgrund eines Fehlers konnte deine Zeit nicht gespeichert werden :-(");
+            PlayerUtils.sendInfo(player, "Bitte wende dich an einen Admin.");
+        }
 
         // update the player & the data
         this.playerQuit(playerData);
-
     }
-
     public void playerQuit(PlayerData playerData) {
         playerData.quitDungeon();
         this.players.remove(playerData.getPlayerName());
