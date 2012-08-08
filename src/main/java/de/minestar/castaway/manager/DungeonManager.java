@@ -20,10 +20,13 @@ package de.minestar.castaway.manager;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.Dungeon;
+import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class DungeonManager {
 
@@ -41,10 +44,27 @@ public class DungeonManager {
 
     private void loadDungeons() {
         dungeonIDMap = CastAwayCore.databaseManager.loadDungeon();
+        ConsoleUtils.printInfo(CastAwayCore.NAME, "Loaded " + dungeonIDMap.size() + " dungeons from database");
+
+        if (dungeonIDMap.isEmpty())
+            return;
+
+        // LOAD REGISTERED BLOCKS FROM DATABASE
+        StringBuilder sBuilder = new StringBuilder("Loaded Dungeons: ");
+        List<AbstractActionBlock> list = null;
         for (Dungeon dungeon : dungeonIDMap.values()) {
-            dungeon.registerBlocks(CastAwayCore.databaseManager.loadRegisteredActionBlocks(dungeon));
+            list = CastAwayCore.databaseManager.loadRegisteredActionBlocks(dungeon);
+            dungeon.registerBlocks(list);
+
+            sBuilder.append(dungeon.getName());
+            sBuilder.append('(');
+            sBuilder.append(list.size());
+            sBuilder.append(" ActionBlocks ");
+            sBuilder.append("), ");
+
             dungeonNameMap.put(dungeon.getName().toLowerCase(), dungeon);
         }
+        ConsoleUtils.printInfo(CastAwayCore.NAME, sBuilder.substring(0, sBuilder.length() - 2));
     }
 
     public void addDungeon(String dungeonName, String creatorName) {
