@@ -20,17 +20,15 @@ package de.minestar.castaway.blocks;
 
 import org.bukkit.entity.Player;
 
-import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
-import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class DungeonStartBlock extends AbstractActionBlock {
+public class DungeonCheckBlock extends AbstractActionBlock {
 
-    public DungeonStartBlock(BlockVector vector, Dungeon dungeon) {
-        super(vector, dungeon, ActionBlockType.DUNGEON_START);
+    public DungeonCheckBlock(BlockVector vector, Dungeon dungeon) {
+        super(vector, dungeon, ActionBlockType.DUNGEON_CHECK);
         this.setHandlePhysical();
         this.setHandleLeftClick();
         this.setHandleRightClick();
@@ -40,19 +38,16 @@ public class DungeonStartBlock extends AbstractActionBlock {
     @Override
     public boolean execute(Player player, PlayerData data) {
 
-        // join the dungeon
+        // Player must be in dungeon
         if (!data.isInDungeon()) {
-            this.dungeon.playerJoin(data);
-            return false;
-        } else {
-            // Player must be in normal mode
-            if (!data.getDungeon().equals(this.dungeon)) {
-                PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
-                PlayerUtils.sendInfo(player, "Gib /respawn ein um dem Grauen zu entkommen.");
-                return true;
-            }
-            return false;
+            return true;
         }
 
+        // The dungeon must be correct
+        if (!data.getDungeon().equals(this.dungeon)) {
+            return true;
+        }
+
+        return false;
     }
 }

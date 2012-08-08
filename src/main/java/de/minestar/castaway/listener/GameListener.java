@@ -161,11 +161,13 @@ public class GameListener implements Listener {
                 break;
             }
             case PHYSICAL : {
-                // handle physical action - we need a stoneplate
+                // handle physical action
                 if (!block.isHandlePhysical()) {
                     break;
                 }
-                if (!event.getClickedBlock().getType().equals(Material.STONE_PLATE)) {
+
+                // we need a plate
+                if (event.getClickedBlock().getTypeId() != Material.STONE_PLATE.getId() && event.getClickedBlock().getTypeId() != Material.WOOD_PLATE.getId()) {
                     break;
                 }
 
@@ -184,7 +186,6 @@ public class GameListener implements Listener {
             event.setCancelled(true);
         }
     }
-
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         // only handle players
