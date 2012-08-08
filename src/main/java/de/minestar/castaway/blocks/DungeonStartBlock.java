@@ -29,6 +29,8 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class DungeonStartBlock extends AbstractActionBlock {
 
+    private long lastStartTime = System.currentTimeMillis();
+
     public DungeonStartBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon, ActionBlockType.DUNGEON_START);
         this.setHandlePhysical();
@@ -39,6 +41,14 @@ public class DungeonStartBlock extends AbstractActionBlock {
 
     @Override
     public boolean execute(Player player, PlayerData data) {
+
+        long currentTime = System.currentTimeMillis();
+        if (currentTime <= lastStartTime + 5 * 1000) {
+            PlayerUtils.sendError(player, CastAwayCore.NAME, "Bitte warte einen Moment.");
+            PlayerUtils.sendInfo(player, "Versuche es in wenigen Sekunden nochmal.");
+            return true;
+        }
+
         // Player must be in normal mode
         if (data.isInDungeon() && !data.getDungeon().equals(this.dungeon)) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du bist momentan im Dungeon!");
