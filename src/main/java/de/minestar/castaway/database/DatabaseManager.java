@@ -83,7 +83,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         addSign = con.prepareStatement("INSERT INTO sign (dungeon, x, y, z, world, subID) VALUES (?, ?, ?, ?, ?, ?)");
 
-        loadSigns = con.prepareStatement("SELECT * FROM sign WHERE dungeon = ?");
+        loadSigns = con.prepareStatement("SELECT * FROM sign WHERE dungeon = ? ORDER BY ID ASC");
 
         deleteSingleSign = con.prepareStatement("DELETE FROM sign WHERE dungeon = ? AND x = ? AND y = ? AND z = ? AND world = ?");
 
@@ -381,6 +381,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
                     continue;
                 }
 
+                // create sign
                 bVector = new BlockVector(world, x, y, z);
                 sign = new SingleSign(dungeon, bVector, subID);
                 signList.add(sign);

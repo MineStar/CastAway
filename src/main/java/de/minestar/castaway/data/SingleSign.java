@@ -92,8 +92,20 @@ public class SingleSign {
     }
 
     @Override
+    public boolean equals(Object object) {
+        if (object == null) {
+            return false;
+        }
+
+        if (!(object instanceof SingleSign)) {
+            return false;
+        }
+
+        return ((SingleSign) object).getVector().equals(this.vector);
+    }
+
+    @Override
     public String toString() {
         return "SingleSign = { " + this.dungeon + " , " + this.vector + ", SubData=" + this.subData + " }";
     }
-
 }

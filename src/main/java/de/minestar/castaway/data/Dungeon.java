@@ -18,8 +18,10 @@
 
 package de.minestar.castaway.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +39,8 @@ public class Dungeon {
     private final String name;
     private int ID;
 
-    private Map<BlockVector, SingleSign> registeredSigns;
+    private Map<BlockVector, SingleSign> registeredSignsByVector;
+    private List<SingleSign> registeredSigns;
     private Map<BlockVector, AbstractActionBlock> registeredBlocks;
     private Map<String, PlayerData> players;
 
@@ -48,7 +51,8 @@ public class Dungeon {
         this.name = name;
         this.creator = creator;
         this.registeredBlocks = new HashMap<BlockVector, AbstractActionBlock>();
-        this.registeredSigns = new HashMap<BlockVector, SingleSign>();
+        this.registeredSignsByVector = new HashMap<BlockVector, SingleSign>();
+        this.registeredSigns = new ArrayList<SingleSign>();
         this.players = new HashMap<String, PlayerData>();
         this.hash = generateHash();
     }
@@ -89,22 +93,41 @@ public class Dungeon {
     // ///////////////////////////////////
 
     public void registerSigns(SingleSign... signs) {
-        for (SingleSign sign : signs)
-            this.registeredSigns.put(sign.getVector(), sign);
+        for (SingleSign sign : signs) {
+            if (!this.registeredSignsByVector.containsKey(sign.getVector())) {
+                this.registeredSignsByVector.put(sign.getVector(), sign);
+                this.registeredSigns.add(sign);
+            }
+        }
     }
 
     public void registerSigns(Collection<SingleSign> signs) {
-        for (SingleSign sign : signs)
-            this.registeredSigns.put(sign.getVector(), sign);
+        for (SingleSign sign : signs) {
+            if (!this.registeredSignsByVector.containsKey(sign.getVector())) {
+                this.registeredSignsByVector.put(sign.getVector(), sign);
+                this.registeredSigns.add(sign);
+            }
+        }
     }
 
     public void unRegisterSigns(BlockVector... blockPositions) {
-        for (BlockVector blockPosition : blockPositions)
-            this.registeredSigns.remove(blockPosition);
+        for (BlockVector blockPosition : blockPositions) {
+            SingleSign sign = this.registeredSignsByVector.remove(blockPosition);
+            if (sign != null) {
+                int count = 0;
+                INNER : for (SingleSign inList : this.registeredSigns) {
+                    if (sign.equals(inList)) {
+                        this.registeredSigns.remove(count);
+                        break INNER;
+                    }
+                    ++count;
+                }
+            }
+        }
     }
 
-    public Map<BlockVector, SingleSign> getRegisteredSigns() {
-        return new HashMap<BlockVector, SingleSign>(this.registeredSigns);
+    public Map<BlockVector, SingleSign> getRegisteredSignsByVector() {
+        return new HashMap<BlockVector, SingleSign>(this.registeredSignsByVector);
     }
 
     // ///////////////////////////////////
