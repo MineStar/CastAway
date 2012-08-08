@@ -91,6 +91,23 @@ public class SingleSign {
         return true;
     }
 
+    public boolean isFilledWithPlayerData() {
+        // get the location
+        Location location = vector.getLocation();
+        if (location == null) {
+            return false;
+        }
+
+        // return if the sign already exists
+        Block block = location.getBlock();
+        if (block.getTypeId() != Material.WALL_SIGN.getId() || block.getData() != this.subData) {
+            return false;
+        }
+
+        Sign sign = (Sign) (this.vector.getLocation().getBlock().getState());
+        return (sign.getLine(1).length() > 0 && sign.getLine(2).length() > 0 && sign.getLine(3).length() > 0);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object == null) {
