@@ -50,13 +50,21 @@ public class GameManager {
         }
     }
 
-    public void unRegisterSingleBlock(AbstractActionBlock actionBlock) {
-        blockMap.remove(actionBlock.getVector());
+    public void unRegisterSingleBlock(AbstractActionBlock block) {
+        if (this.getBlock(block.getVector()) != null) {
+            blockMap.remove(block.getVector());
+            block.getDungeon().unRegisterBlocks(block.getVector());
+            CastAwayCore.databaseManager.deleteSingleRegisteredBlock(block);
+        }
     }
 
     public void unRegisterBlocks(Collection<AbstractActionBlock> actionBlocks) {
         for (AbstractActionBlock actionBlock : actionBlocks) {
-            blockMap.remove(actionBlock.getVector());
+            if (this.getBlock(actionBlock.getVector()) != null) {
+                blockMap.remove(actionBlock.getVector());
+                actionBlock.getDungeon().unRegisterBlocks(actionBlock.getVector());
+                CastAwayCore.databaseManager.deleteSingleRegisteredBlock(actionBlock);
+            }
         }
     }
 }

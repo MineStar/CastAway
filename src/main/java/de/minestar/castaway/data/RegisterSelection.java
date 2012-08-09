@@ -22,21 +22,28 @@ public class RegisterSelection {
 
     private ActionBlockType actionBlockType;
     private Dungeon dungeon;
-    private boolean isSignEdit = false;
-
+    private RegisterAction action = RegisterAction.ADD_BLOCK;
+    // Constructor used for : /castaway register <Dungeon> <BlockType>
     public RegisterSelection(ActionBlockType actionBlockType, Dungeon dungeon) {
         this.actionBlockType = actionBlockType;
         this.dungeon = dungeon;
     }
-
-    public RegisterSelection(Dungeon dungeon) {
+    // Constructor used for : Registering of HoF-Signs
+    public RegisterSelection(Dungeon dungeon, RegisterAction action) {
         this.dungeon = dungeon;
         this.actionBlockType = null;
-        this.isSignEdit = true;
+        this.action = action;
     }
 
-    public boolean isSignEdit() {
-        return isSignEdit;
+    // Constructor used for : /castaway unregister
+    public RegisterSelection(RegisterAction action) {
+        this.dungeon = null;
+        this.actionBlockType = null;
+        this.action = action;
+    }
+
+    public RegisterAction getAction() {
+        return action;
     }
 
     public ActionBlockType getActionBlockType() {
