@@ -46,13 +46,16 @@ public class FullHealthBlock extends AbstractActionBlock {
             return true;
         }
 
-        // update the players health
-        player.setHealth(20);
+        // only act, if we can do something...
+        if (player.getHealth() < 20) {
+            // update the players health
+            player.setHealth(20);
 
-        // send info
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendInfo(player, "Du bist jetzt wieder fit!");
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+            // send info
+            PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+            PlayerUtils.sendInfo(player, "Du bist jetzt wieder fit!");
+            PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+        }
         return false;
     }
 }
