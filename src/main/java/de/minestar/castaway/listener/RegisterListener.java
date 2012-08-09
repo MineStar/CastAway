@@ -68,13 +68,15 @@ public class RegisterListener implements Listener {
         AbstractActionBlock actionBlock = CastAwayCore.gameManager.getBlock(vector);
         if (actionBlock != null) {
             // finally remove it
-            CastAwayCore.gameManager.unRegisterSingleBlock(actionBlock);
-            PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde entfernt.");
+            if (CastAwayCore.gameManager.unRegisterSingleBlock(actionBlock)) {
+                PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde entfernt.");
+            } else {
+                PlayerUtils.sendError(player, CastAwayCore.NAME, "Block konnte nicht entfernt werden.");
+            }
         } else {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Dieser Block ist kein ActionBlock.");
         }
     }
-
     private void handleEditHallOfFame(Block block, Player player, RegisterSelection selection, boolean isLeftClick) {
         if (block.getTypeId() != Material.WALL_SIGN.getId()) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst auf ein Schild klicken!");

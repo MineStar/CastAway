@@ -75,7 +75,7 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         addActionBlock = con.prepareStatement("INSERT INTO actionBlock (dungeon, x, y, z, world, actionType) VALUES (?, ?, ?, ?, ?, ?)");
 
-        deleteSingleRegisteredBlock = con.prepareStatement("DELETE FROM actionBlock WHERE dungeon = ? AND y = ? AND x = ? AND z = ? AND world = ?");
+        deleteSingleRegisteredBlock = con.prepareStatement("DELETE FROM actionBlock WHERE dungeon = ? AND x = ? AND y = ? AND z = ? AND world = ?");
 
         deleteRegisteredBlocks = con.prepareStatement("DELETE FROM actionBlock WHERE dungeon = ?");
 

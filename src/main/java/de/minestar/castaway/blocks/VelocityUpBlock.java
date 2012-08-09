@@ -48,7 +48,7 @@ public class VelocityUpBlock extends AbstractActionBlock {
 
         // get the current velocity
         Vector velocity = player.getVelocity().clone();
-        velocity.setY(velocity.getY() + 5.0f);
+        velocity.setY(velocity.getY() + 2.5f);
         player.setVelocity(velocity.clone());
         return false;
     }
