@@ -41,7 +41,7 @@ public enum ActionBlockType {
 
     VELOCITY_UP(3, VelocityUpBlock.class, "JUMP_UP"),
 
-    VELOCITY_REVERSE_XZ(3, VelocityReverseXZBlock.class, "REVERSE_XZ");
+    VELOCITY_REVERSE_XZ(4, VelocityReverseXZBlock.class, "REVERSE_XZ");
 
     private final int ID;
     private final Class<? extends AbstractActionBlock> clazz;
