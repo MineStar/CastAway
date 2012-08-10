@@ -59,7 +59,6 @@ public class GameListener implements Listener {
         acceptedActions = new HashSet<Action>();
         acceptedActions.add(Action.LEFT_CLICK_BLOCK);
         acceptedActions.add(Action.RIGHT_CLICK_BLOCK);
-        acceptedActions.add(Action.PHYSICAL);
 
         blockedRegainReasons = new HashSet<RegainReason>();
         blockedRegainReasons.add(RegainReason.SATIATED);

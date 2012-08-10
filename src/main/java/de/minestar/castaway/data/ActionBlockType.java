@@ -26,6 +26,7 @@ import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.blocks.DungeonStartBlock;
 import de.minestar.castaway.blocks.FullHealthBlock;
 import de.minestar.castaway.blocks.SignBlock;
+import de.minestar.castaway.blocks.VelocityReverseXZBlock;
 import de.minestar.castaway.blocks.VelocityUpBlock;
 
 public enum ActionBlockType {
@@ -38,7 +39,9 @@ public enum ActionBlockType {
 
     SPECIAL_HEALTH_FULL(2, FullHealthBlock.class, "FULL_HEALTH"),
 
-    VELOCITY_UP(3, VelocityUpBlock.class, "JUMP_UP");
+    VELOCITY_UP(3, VelocityUpBlock.class, "JUMP_UP"),
+
+    VELOCITY_REVERSE_XZ(3, VelocityReverseXZBlock.class, "REVERSE_XZ");
 
     private final int ID;
     private final Class<? extends AbstractActionBlock> clazz;
