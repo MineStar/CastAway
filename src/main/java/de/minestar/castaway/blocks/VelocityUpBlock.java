@@ -21,17 +21,16 @@ package de.minestar.castaway.blocks;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
-import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class VelocityUpBlock extends AbstractActionBlock {
 
     public VelocityUpBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon, ActionBlockType.VELOCITY_UP);
+        this.setExecuteIfNotInDungeon();
         this.setHandlePhysical();
         this.setHandleLeftClick();
         this.setHandleRightClick();
@@ -40,11 +39,11 @@ public class VelocityUpBlock extends AbstractActionBlock {
     @Override
     public boolean execute(Player player, PlayerData data) {
         // Player must be in a dungeon
-        if (!data.isInDungeon() || !data.getDungeon().equals(this.dungeon)) {
-            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
-            PlayerUtils.sendInfo(player, "Wende dich an einen Admin falls du es eigentlich bist.");
-            return true;
-        }
+//        if (!data.isInDungeon() || !data.getDungeon().equals(this.dungeon)) {
+//            PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
+//            PlayerUtils.sendInfo(player, "Wende dich an einen Admin falls du es eigentlich bist.");
+//            return true;
+//        }
 
         // get the current velocity
         Vector velocity = player.getVelocity().clone();
