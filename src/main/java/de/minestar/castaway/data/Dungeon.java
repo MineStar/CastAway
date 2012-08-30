@@ -179,22 +179,22 @@ public class Dungeon {
     // ///////////////////////////////////
 
     public void playerJoin(PlayerData playerData) {
-        playerData.joinDungeon(this);
-
         // get the player
         Player player = playerData.getPlayer();
-
-        // regain health
-        player.setHealth(20);
-
-        // regain food
-        player.setFoodLevel(20);
 
         // remove active potioneffects
         for (PotionEffect effect : player.getActivePotionEffects()) {
             PotionEffectType type = effect.getType();
             player.removePotionEffect(type);
         }
+
+        playerData.joinDungeon(this);
+
+        // regain health
+        player.setHealth(20);
+
+        // regain food
+        player.setFoodLevel(20);
 
         // send info
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
