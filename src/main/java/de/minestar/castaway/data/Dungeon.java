@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import de.minestar.castaway.blocks.AbstractActionBlock;
@@ -190,7 +191,8 @@ public class Dungeon {
         player.setFoodLevel(20);
 
         // remove active potioneffects
-        for (PotionEffectType type : PotionEffectType.values()) {
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            PotionEffectType type = effect.getType();
             player.removePotionEffect(type);
         }
 
@@ -215,6 +217,7 @@ public class Dungeon {
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
         PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + this.getName() + "' erfolgreich beendet!");
         PlayerUtils.sendSuccess(player, "Du hast dafür " + formatTime(time) + " benötigt");
+        PlayerUtils.sendSuccess(player, "Schau dir deinen Platz in der Hall of Fame an! /warp HallOfFame");
         PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
 
         // SAVE STATS & update sign if successfull
