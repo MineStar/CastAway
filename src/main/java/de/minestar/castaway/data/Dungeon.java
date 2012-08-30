@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
@@ -190,8 +190,8 @@ public class Dungeon {
         player.setFoodLevel(20);
 
         // remove active potioneffects
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.removePotionEffect(effect.getType());
+        for (PotionEffectType type : PotionEffectType.values()) {
+            player.removePotionEffect(type);
         }
 
         // send info
