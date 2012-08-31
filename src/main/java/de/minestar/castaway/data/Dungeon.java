@@ -319,6 +319,10 @@ public class Dungeon {
         return name;
     }
 
+    public String getCorrectedName() {
+        return name.replace("_", " ");
+    }
+
     public String getAuthor() {
         return creator;
     }
