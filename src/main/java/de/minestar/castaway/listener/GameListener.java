@@ -26,6 +26,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
@@ -69,6 +71,30 @@ public class GameListener implements Listener {
 
     public GameListener() {
         this.vector = new BlockVector("", 0, 0, 0);
+    }
+
+    // //////////////////////////////////////
+    //
+    // BLOCK-HANDLING
+    //
+    // //////////////////////////////////////
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        // cancel event, if in dungeon mode
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+        if (this.playerData.isInDungeon()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        // cancel event, if in dungeon mode
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+        if (this.playerData.isInDungeon()) {
+            event.setCancelled(true);
+        }
     }
 
     // //////////////////////////////////////
