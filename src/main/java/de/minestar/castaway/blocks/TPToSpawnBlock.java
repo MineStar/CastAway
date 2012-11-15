@@ -42,9 +42,9 @@ public class TPToSpawnBlock extends AbstractActionBlock {
         // Player must be in a dungeon
         if (!data.isInDungeon() || !data.getDungeon().equals(this.dungeon)) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
-            PlayerUtils.sendInfo(player, "Du wirst nun zum Spawn teleportiert");
+            PlayerUtils.sendInfo(player, "Du wirst nun zum Spawn teleportiert.");
             player.teleport(player.getWorld().getSpawnLocation());
-            return true;
+            return false;
         }
         return false;
     }

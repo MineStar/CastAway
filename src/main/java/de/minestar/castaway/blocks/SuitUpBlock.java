@@ -25,6 +25,7 @@ import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
 import de.minestar.castaway.data.PlayerData;
+import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class SuitUpBlock extends AbstractActionBlock {
 
@@ -46,7 +47,9 @@ public class SuitUpBlock extends AbstractActionBlock {
         String name = "";
         ItemStack[] contents = player.getInventory().getContents();
         int count = 0;
+        int index = -1;
         for (ItemStack stack : contents) {
+            index++;
             if (stack == null) {
                 continue;
             }
@@ -57,23 +60,25 @@ public class SuitUpBlock extends AbstractActionBlock {
 
             name = stack.getType().name().toLowerCase();
             if (name.contains("helmet")) {
-                player.getInventory().setHelmet(stack);
+                player.getInventory().setHelmet(stack.clone());
+                player.getInventory().setItem(index, null);
                 count++;
-                continue;
             } else if (name.contains("chestplate")) {
-                player.getInventory().setChestplate(stack);
+                player.getInventory().setChestplate(stack.clone());
+                player.getInventory().setItem(index, null);
                 count++;
-                continue;
             } else if (name.contains("leggings")) {
-                player.getInventory().setLeggings(stack);
+                player.getInventory().setLeggings(stack.clone());
+                player.getInventory().setItem(index, null);
                 count++;
-                continue;
             } else if (name.contains("boots")) {
-                player.getInventory().setBoots(stack);
+                player.getInventory().setBoots(stack.clone());
+                player.getInventory().setItem(index, null);
                 count++;
-                continue;
             }
         }
+
+        PlayerUtils.sendInfo(player, "Suit up!");
         return false;
     }
 }
