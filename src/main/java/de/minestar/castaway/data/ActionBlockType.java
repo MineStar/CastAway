@@ -24,8 +24,14 @@ import java.util.Map;
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.blocks.DungeonStartBlock;
+import de.minestar.castaway.blocks.NormalModeBlock;
 import de.minestar.castaway.blocks.FullHealthBlock;
+import de.minestar.castaway.blocks.ResetKeepModeBlock;
+import de.minestar.castaway.blocks.SetKeepModeBlock;
+import de.minestar.castaway.blocks.SetRespawnPositionBlock;
 import de.minestar.castaway.blocks.SignBlock;
+import de.minestar.castaway.blocks.SuitUpBlock;
+import de.minestar.castaway.blocks.TPToSpawnBlock;
 import de.minestar.castaway.blocks.VelocityReverseXZBlock;
 import de.minestar.castaway.blocks.VelocityUpBlock;
 
@@ -41,7 +47,19 @@ public enum ActionBlockType {
 
     VELOCITY_UP(3, VelocityUpBlock.class, "JUMP_UP"),
 
-    VELOCITY_REVERSE_XZ(4, VelocityReverseXZBlock.class, "REVERSE_XZ");
+    VELOCITY_REVERSE_XZ(4, VelocityReverseXZBlock.class, "REVERSE_XZ"),
+
+    TP_TO_SPAWN(5, TPToSpawnBlock.class, "TP_TO_SPAWN"),
+
+    SET_RESPAWN_POS(6, SetRespawnPositionBlock.class, "SET_RESPAWN_POS"),
+
+    KEEP_DUNGEON_MODE(7, SetKeepModeBlock.class, "KEEP_DUNGEON_MODE"),
+
+    RESET_KEEP_DUNGEON_MODE(8, ResetKeepModeBlock.class, "RESET_KEEP_DUNGEON_MODE"),
+
+    SUIT_UP(9, SuitUpBlock.class, "SUIT_UP"),
+
+    NORMAL_MODE(10, NormalModeBlock.class, "NORMAL_MODE");
 
     private final int ID;
     private final Class<? extends AbstractActionBlock> clazz;
@@ -82,6 +100,10 @@ public enum ActionBlockType {
     }
 
     public static ActionBlockType get(String commandName) {
-        return mapByCommand.get(commandName);
+        ActionBlockType type = mapByCommand.get(commandName);
+        if (type == null) {
+            type = mapByCommand.get(commandName.toLowerCase());
+        }
+        return type;
     }
 }

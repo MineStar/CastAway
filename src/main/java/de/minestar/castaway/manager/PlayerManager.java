@@ -46,10 +46,6 @@ public class PlayerManager {
         return data;
     }
 
-    public void removePlayerData(String playerName) {
-        this.playerMap.remove(playerName);
-    }
-
     public boolean isInDungeon(String playerName) {
         return this.getPlayerData(playerName).isInDungeon();
     }

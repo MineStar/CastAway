@@ -57,7 +57,10 @@ public class cmdRegister extends AbstractCommand {
 
         // ID NOR NAME WORKS
         if (actionBlockType == null) {
-            PlayerUtils.sendSuccess(player, pluginName, "Unbekannter ActionBlockTyp!");
+            PlayerUtils.sendError(player, pluginName, "Unbekannter ActionBlockTyp!");
+            for (ActionBlockType type : ActionBlockType.values()) {
+                PlayerUtils.sendInfo(player, type.getCommandName());
+            }
             return;
         }
 

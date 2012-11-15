@@ -38,6 +38,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import com.bukkit.gemo.utils.BlockUtils;
 import com.bukkit.gemo.utils.UtilPermissions;
@@ -159,6 +160,18 @@ public class GameListener implements Listener {
     //
     // //////////////////////////////////////
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        // get PlayerData
+        this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
+
+        // do we have a respawnposition?
+        if (this.playerData.hasRespawnLocation()) {
+            // UPDATE THE SPAWN POSITION
+            event.setRespawnLocation(this.playerData.getRespawnLocation());
+        }
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         // get PlayerData
@@ -229,7 +242,7 @@ public class GameListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon()) {
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).isNormalMode()) {
             event.setCancelled(true);
         }
     }
@@ -242,7 +255,7 @@ public class GameListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon()) {
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).isNormalMode()) {
             if (blockedRegainReasons.contains(event.getRegainReason())) {
                 event.setCancelled(true);
                 return;
@@ -304,7 +317,9 @@ public class GameListener implements Listener {
             event.setDroppedExp(0);
 
             // FIRE
-            this.playerData.quitDungeon();
+            if (!this.playerData.isKeepDungeonModeOnDeath()) {
+                this.playerData.quitDungeon();
+            }
         }
     }
 

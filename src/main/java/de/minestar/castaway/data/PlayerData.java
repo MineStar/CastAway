@@ -20,6 +20,7 @@ package de.minestar.castaway.data;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class PlayerData {
@@ -27,6 +28,9 @@ public class PlayerData {
     private boolean inDungeon;
     private Dungeon dungeon;
     private long startTime;
+    private Location respawnLocation = null;
+    private boolean keepDungeonModeOnDeath = false;
+    private boolean normalMode = false;
 
     public PlayerData(String playerName) {
         this.playerName = playerName;
@@ -42,12 +46,16 @@ public class PlayerData {
         this.dungeon = dungeon;
         this.inDungeon = true;
         this.updateBukkitPlayer();
+        this.respawnLocation = null;
         this.startTime = System.currentTimeMillis();
     }
 
     public void quitDungeon() {
         this.inDungeon = false;
         this.dungeon = null;
+        this.respawnLocation = null;
+        this.keepDungeonModeOnDeath = false;
+        this.normalMode = false;
         this.updateBukkitPlayer();
     }
 
@@ -86,5 +94,33 @@ public class PlayerData {
 
     public long getStartTime() {
         return this.startTime;
+    }
+
+    public boolean hasRespawnLocation() {
+        return this.getRespawnLocation() != null;
+    }
+
+    public Location getRespawnLocation() {
+        return respawnLocation;
+    }
+
+    public void setRespawnLocation(Location respawnLocation) {
+        this.respawnLocation = respawnLocation;
+    }
+
+    public void setKeepDungeonModeOnDeath(boolean keepDungeonModeOnDeath) {
+        this.keepDungeonModeOnDeath = keepDungeonModeOnDeath;
+    }
+
+    public boolean isKeepDungeonModeOnDeath() {
+        return keepDungeonModeOnDeath;
+    }
+
+    public boolean isNormalMode() {
+        return normalMode;
+    }
+
+    public void setNormalMode(boolean normalMode) {
+        this.normalMode = normalMode;
     }
 }
