@@ -66,14 +66,14 @@ public class PlayerData {
     private void updateBukkitPlayer() {
         Player player = Bukkit.getPlayerExact(this.playerName);
         if (player != null) {
+            player.setAllowFlight(false);
+            player.getInventory().clear();
+            player.getInventory().setBoots(null);
+            player.getInventory().setChestplate(null);
+            player.getInventory().setHelmet(null);
+            player.getInventory().setLeggings(null);
             if (this.inDungeon) {
-                player.setAllowFlight(false);
                 player.setGameMode(GameMode.ADVENTURE);
-                player.getInventory().clear();
-                player.getInventory().setBoots(null);
-                player.getInventory().setChestplate(null);
-                player.getInventory().setHelmet(null);
-                player.getInventory().setLeggings(null);
             } else {
                 player.setGameMode(GameMode.SURVIVAL);
             }
