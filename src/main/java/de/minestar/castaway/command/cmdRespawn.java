@@ -39,8 +39,9 @@ public class cmdRespawn extends AbstractCommand {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst in einem Dungeon sein!");
         } else {
             String dungeonName = playerData.getDungeon().getCorrectedName();
-            PlayerUtils.sendSuccess(player, "Du hast den Dungeon '" + dungeonName + "' verlassen!");
+            playerData.quitDungeon();
             player.setHealth(0);
+            PlayerUtils.sendSuccess(player, "Du hast den Dungeon '" + dungeonName + "' verlassen!");
         }
     }
 }

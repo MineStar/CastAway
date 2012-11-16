@@ -36,6 +36,7 @@ public class SuitUpBlock extends AbstractActionBlock {
         this.setHandleRightClick();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean execute(Player player, PlayerData data) {
         // Player must be in a dungeon
@@ -77,6 +78,8 @@ public class SuitUpBlock extends AbstractActionBlock {
                 count++;
             }
         }
+
+        player.updateInventory();
 
         PlayerUtils.sendInfo(player, "Suit up!");
         return false;

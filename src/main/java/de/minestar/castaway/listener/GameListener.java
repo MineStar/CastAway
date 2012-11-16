@@ -323,6 +323,7 @@ public class GameListener implements Listener {
 
             // CLEAR INVENTORY ON DEATH
             if (dungeon.hasOption(DungeonOption.CLEAR_INVENTORY_ON_DEATH)) {
+                event.getDrops().clear();
                 player.getInventory().clear();
                 player.getInventory().setBoots(null);
                 player.getInventory().setChestplate(null);
