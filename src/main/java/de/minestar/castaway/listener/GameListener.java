@@ -47,6 +47,8 @@ import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.core.Settings;
 import de.minestar.castaway.data.BlockVector;
+import de.minestar.castaway.data.Dungeon;
+import de.minestar.castaway.data.DungeonOption;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.core.MinestarCore;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -242,7 +244,7 @@ public class GameListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).isNormalMode()) {
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon().hasOption(DungeonOption.HUNGER)) {
             event.setCancelled(true);
         }
     }
@@ -255,7 +257,7 @@ public class GameListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).isNormalMode()) {
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon().hasOption(DungeonOption.AUTO_REGAIN_HEALTH)) {
             if (blockedRegainReasons.contains(event.getRegainReason())) {
                 event.setCancelled(true);
                 return;
@@ -317,8 +319,10 @@ public class GameListener implements Listener {
             event.setKeepLevel(true);
             event.setDroppedExp(0);
 
+            Dungeon dungeon = CastAwayCore.playerManager.getPlayerData(player).getDungeon();
+
             // CLEAR INVENTORY ON DEATH
-            if (CastAwayCore.playerManager.getPlayerData(player).isClearInvOnDeath()) {
+            if (dungeon.hasOption(DungeonOption.CLEAR_INVENTORY_ON_DEATH)) {
                 player.getInventory().clear();
                 player.getInventory().setBoots(null);
                 player.getInventory().setChestplate(null);
@@ -327,7 +331,7 @@ public class GameListener implements Listener {
             }
 
             // FIRE
-            if (!this.playerData.isKeepDungeonModeOnDeath()) {
+            if (!dungeon.hasOption(DungeonOption.KEEP_DUNGEON_MODE_ON_DEATH)) {
                 this.playerData.quitDungeon();
             }
         }

@@ -5,6 +5,7 @@ CREATE  TABLE IF NOT EXISTS `dungeon` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` TEXT NOT NULL ,
   `creator` TEXT NOT NULL ,
+  `optionMask` INT NOT NULL,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 

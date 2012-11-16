@@ -29,9 +29,6 @@ public class PlayerData {
     private Dungeon dungeon;
     private long startTime;
     private Location respawnLocation = null;
-    private boolean keepDungeonModeOnDeath = false;
-    private boolean normalMode = false;
-    private boolean clearInvOnDeath = false;
 
     public PlayerData(String playerName) {
         this.playerName = playerName;
@@ -47,7 +44,6 @@ public class PlayerData {
         this.dungeon = dungeon;
         this.inDungeon = true;
         this.respawnLocation = null;
-        this.clearInvOnDeath = false;
         this.startTime = System.currentTimeMillis();
         this.updateBukkitPlayer();
     }
@@ -56,9 +52,6 @@ public class PlayerData {
         this.inDungeon = false;
         this.dungeon = null;
         this.respawnLocation = null;
-        this.keepDungeonModeOnDeath = false;
-        this.clearInvOnDeath = false;
-        this.normalMode = false;
         this.updateBukkitPlayer();
     }
 
@@ -66,22 +59,22 @@ public class PlayerData {
         return Bukkit.getPlayerExact(this.playerName);
     }
 
+    @SuppressWarnings("deprecation")
     private void updateBukkitPlayer() {
         Player player = Bukkit.getPlayerExact(this.playerName);
         if (player != null) {
             if (this.inDungeon) {
+                player.setAllowFlight(false);
                 player.setGameMode(GameMode.ADVENTURE);
+                player.getInventory().clear();
+                player.getInventory().setBoots(null);
+                player.getInventory().setChestplate(null);
+                player.getInventory().setHelmet(null);
+                player.getInventory().setLeggings(null);
+                player.updateInventory();
             } else {
                 player.setGameMode(GameMode.SURVIVAL);
             }
-
-            player.setAllowFlight(false);
-            player.getInventory().clear();
-            player.getInventory().setBoots(null);
-            player.getInventory().setChestplate(null);
-            player.getInventory().setHelmet(null);
-            player.getInventory().setLeggings(null);
-            player.updateInventory();
         }
     }
 
@@ -111,29 +104,5 @@ public class PlayerData {
 
     public void setRespawnLocation(Location respawnLocation) {
         this.respawnLocation = respawnLocation;
-    }
-
-    public void setKeepDungeonModeOnDeath(boolean keepDungeonModeOnDeath) {
-        this.keepDungeonModeOnDeath = keepDungeonModeOnDeath;
-    }
-
-    public boolean isKeepDungeonModeOnDeath() {
-        return keepDungeonModeOnDeath;
-    }
-
-    public boolean isNormalMode() {
-        return normalMode;
-    }
-
-    public void setNormalMode(boolean normalMode) {
-        this.normalMode = normalMode;
-    }
-
-    public boolean isClearInvOnDeath() {
-        return clearInvOnDeath;
-    }
-
-    public void setClearInvOnDeath(boolean clearInvOnDeath) {
-        this.clearInvOnDeath = clearInvOnDeath;
     }
 }

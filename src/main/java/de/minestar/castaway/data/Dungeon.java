@@ -56,6 +56,8 @@ public class Dungeon {
 
     private final int hash;
 
+    private int optionMask = 0;
+
     public Dungeon(int dungeonID, String name, String creator) {
         this.ID = dungeonID;
         this.name = name;
@@ -208,6 +210,7 @@ public class Dungeon {
         this.players.put(playerData.getPlayerName(), playerData);
     }
 
+    @SuppressWarnings("deprecation")
     public void playerFinished(PlayerData playerData) {
         long time = System.currentTimeMillis() - playerData.getStartTime();
         // get the player
@@ -252,6 +255,15 @@ public class Dungeon {
 
         // update the player & the data
         this.playerQuit(playerData);
+
+        if (this.hasOption(DungeonOption.CLEAR_INVENTORY_ON_FINISH)) {
+            player.getInventory().clear();
+            player.getInventory().setBoots(null);
+            player.getInventory().setChestplate(null);
+            player.getInventory().setHelmet(null);
+            player.getInventory().setLeggings(null);
+            player.updateInventory();
+        }
     }
 
     public void playerQuit(PlayerData playerData) {
@@ -341,6 +353,36 @@ public class Dungeon {
     @Override
     public String toString() {
         return "Dungeon = { Name=" + name + ", Creator=" + creator + ", ID=" + ID + " }";
+    }
+
+    public void setOptionMask(int optionMask) {
+        this.optionMask = optionMask;
+    }
+
+    public int getOptionMask() {
+        return optionMask;
+    }
+
+    public int resetOptionMask() {
+        this.optionMask = 0;
+        return this.getOptionMask();
+    }
+
+    private boolean toggleOption(int option) {
+        this.optionMask ^= option;
+        return this.hasOption(option);
+    }
+
+    private boolean hasOption(int option) {
+        return (this.optionMask & option) == option;
+    }
+
+    public boolean toggleOption(DungeonOption option) {
+        return this.toggleOption(option.getBit());
+    }
+
+    public boolean hasOption(DungeonOption option) {
+        return this.hasOption(option.getBit());
     }
 
     @Override

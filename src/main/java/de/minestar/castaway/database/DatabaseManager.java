@@ -59,9 +59,11 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         /* DUNGEON */
 
-        addDungeon = con.prepareStatement("INSERT INTO dungeon (name, creator) VALUES (?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        addDungeon = con.prepareStatement("INSERT INTO dungeon (name, creator, optionMask) VALUES (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         deleteDungeon = con.prepareStatement("DELETE FROM dungeon WHERE id = ?");
+
+        updateDungeonOption = con.prepareStatement("UPDATE dungeon SET optionMask = ? WHERE id = ?");
 
         addWinner = con.prepareStatement("INSERT INTO winner ( playerName, dungeon, date ) VALUES ( ?, ?, NOW() )");
 
@@ -89,13 +91,13 @@ public class DatabaseManager extends AbstractMySQLHandler {
 
         deleteInheritedSigns = con.prepareStatement("DELETE FROM sign WHERE dungeon = ?");
     }
-
     // ***************
     // *** DUNGEON ***
     // ***************
 
     private PreparedStatement addDungeon;
     private PreparedStatement deleteDungeon;
+    private PreparedStatement updateDungeonOption;
     private PreparedStatement addWinner;
     private PreparedStatement addHighScore;
     private PreparedStatement isWinner;
@@ -133,15 +135,18 @@ public class DatabaseManager extends AbstractMySQLHandler {
         try {
             addDungeon.setString(1, dungeon.getName());
             addDungeon.setString(2, dungeon.getAuthor());
+            addDungeon.setInt(3, 0);
 
             addDungeon.executeUpdate();
 
             ResultSet rs = addDungeon.getGeneratedKeys();
 
-            int id = 0;
+            int id = 0, options = 0;
             if (rs.next()) {
                 id = rs.getInt(1);
+                options = rs.getInt(3);
                 dungeon.setID(id);
+                dungeon.setOptionMask(options);
                 return true;
             } else {
                 ConsoleUtils.printError(CastAwayCore.NAME, "Can't get the id for the dungeon = " + dungeon);
@@ -149,6 +154,17 @@ public class DatabaseManager extends AbstractMySQLHandler {
             }
         } catch (Exception e) {
             ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't insert the dungeon = " + dungeon);
+            return false;
+        }
+    }
+
+    public boolean updateDungeonOption(Dungeon dungeon) {
+        try {
+            updateDungeonOption.setInt(1, dungeon.getOptionMask());
+            updateDungeonOption.setInt(2, dungeon.getID());
+            return updateDungeonOption.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, CastAwayCore.NAME, "Can't update the dungeonoptions = " + dungeon);
             return false;
         }
     }
