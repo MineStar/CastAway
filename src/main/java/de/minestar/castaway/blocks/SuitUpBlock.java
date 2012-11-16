@@ -56,6 +56,7 @@ public class SuitUpBlock extends AbstractActionBlock {
             }
 
             if (count > 3) {
+                PlayerUtils.sendInfo(player, "Suit up!");
                 return false;
             }
 
