@@ -312,9 +312,19 @@ public class GameListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         this.playerData = CastAwayCore.playerManager.getPlayerData(((Player) event.getEntity()).getName());
         if (this.playerData.isInDungeon()) {
+            Player player = (Player) event.getEntity();
             event.setDeathMessage("");
             event.setKeepLevel(true);
             event.setDroppedExp(0);
+
+            // CLEAR INVENTORY ON DEATH
+            if (CastAwayCore.playerManager.getPlayerData(player).isClearInvOnDeath()) {
+                player.getInventory().clear();
+                player.getInventory().setBoots(null);
+                player.getInventory().setChestplate(null);
+                player.getInventory().setHelmet(null);
+                player.getInventory().setLeggings(null);
+            }
 
             // FIRE
             if (!this.playerData.isKeepDungeonModeOnDeath()) {

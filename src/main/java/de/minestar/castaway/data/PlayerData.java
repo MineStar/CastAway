@@ -31,6 +31,7 @@ public class PlayerData {
     private Location respawnLocation = null;
     private boolean keepDungeonModeOnDeath = false;
     private boolean normalMode = false;
+    private boolean clearInvOnDeath = false;
 
     public PlayerData(String playerName) {
         this.playerName = playerName;
@@ -55,6 +56,7 @@ public class PlayerData {
         this.dungeon = null;
         this.respawnLocation = null;
         this.keepDungeonModeOnDeath = false;
+        this.clearInvOnDeath = false;
         this.normalMode = false;
         this.updateBukkitPlayer();
     }
@@ -122,5 +124,13 @@ public class PlayerData {
 
     public void setNormalMode(boolean normalMode) {
         this.normalMode = normalMode;
+    }
+
+    public boolean isClearInvOnDeath() {
+        return clearInvOnDeath;
+    }
+
+    public void setClearInvOnDeath(boolean clearInvOnDeath) {
+        this.clearInvOnDeath = clearInvOnDeath;
     }
 }

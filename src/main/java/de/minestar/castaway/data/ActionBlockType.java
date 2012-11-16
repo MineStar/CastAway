@@ -24,8 +24,8 @@ import java.util.Map;
 import de.minestar.castaway.blocks.AbstractActionBlock;
 import de.minestar.castaway.blocks.DungeonEndBlock;
 import de.minestar.castaway.blocks.DungeonStartBlock;
-import de.minestar.castaway.blocks.NormalModeBlock;
 import de.minestar.castaway.blocks.FullHealthBlock;
+import de.minestar.castaway.blocks.NormalModeBlock;
 import de.minestar.castaway.blocks.ResetKeepModeBlock;
 import de.minestar.castaway.blocks.SetKeepModeBlock;
 import de.minestar.castaway.blocks.SetRespawnPositionBlock;
@@ -59,7 +59,9 @@ public enum ActionBlockType {
 
     SUIT_UP(9, SuitUpBlock.class, "SUIT_UP"),
 
-    NORMAL_MODE(10, NormalModeBlock.class, "NORMAL_MODE");
+    NORMAL_MODE(10, NormalModeBlock.class, "NORMAL_MODE"),
+
+    CLEAR_INV_ON_DEATH(11, NormalModeBlock.class, "CLEAR_INV_ON_DEATH");
 
     private final int ID;
     private final Class<? extends AbstractActionBlock> clazz;
