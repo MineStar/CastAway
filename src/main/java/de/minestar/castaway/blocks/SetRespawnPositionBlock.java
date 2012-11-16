@@ -18,6 +18,7 @@
 
 package de.minestar.castaway.blocks;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
@@ -41,7 +42,11 @@ public class SetRespawnPositionBlock extends AbstractActionBlock {
         // Player must be in a dungeon
         if (data.isInDungeon() && data.getDungeon().equals(this.dungeon)) {
             PlayerUtils.sendInfo(player, "Respawnposition wurde gesetzt!");
-            data.setRespawnLocation(this.vector.getLocation());
+            Location location = this.vector.getLocation().clone();
+            location.setX(location.getX() + 0.5d);
+            location.setY(location.getY() + 0.5d);
+            location.setZ(location.getZ() + 0.5d);
+            data.setRespawnLocation(location);
             return false;
         }
 
