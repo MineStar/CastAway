@@ -108,18 +108,20 @@ public class DatabaseManager extends AbstractMySQLHandler {
         Map<Integer, Dungeon> dungeonMap = new HashMap<Integer, Dungeon>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id, name, creator FROM dungeon");
+            ResultSet rs = stat.executeQuery("SELECT id, name, creator, optionMask FROM dungeon");
 
             // TEMP VARIABLES
             int id;
             String name;
             String creator;
+            int optionMask;
 
             while (rs.next()) {
                 id = rs.getInt(1);
                 name = rs.getString(2);
                 creator = rs.getString(3);
-                dungeonMap.put(id, new Dungeon(id, name, creator));
+                optionMask = rs.getInt(4);
+                dungeonMap.put(id, new Dungeon(id, name, creator, optionMask));
             }
 
         } catch (Exception e) {

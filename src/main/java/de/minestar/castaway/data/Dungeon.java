@@ -58,10 +58,11 @@ public class Dungeon {
 
     private int optionMask = 0;
 
-    public Dungeon(int dungeonID, String name, String creator) {
+    public Dungeon(int dungeonID, String name, String creator, int optionMask) {
         this.ID = dungeonID;
         this.name = name;
         this.creator = creator;
+        this.optionMask = optionMask;
         this.registeredBlocks = new HashMap<BlockVector, AbstractActionBlock>();
         this.registeredSignsByVector = new HashMap<BlockVector, SingleSign>();
         this.registeredSigns = new ArrayList<SingleSign>();
@@ -70,7 +71,7 @@ public class Dungeon {
     }
 
     public Dungeon(String name, String creator) {
-        this(0, name, creator);
+        this(0, name, creator, 0);
     }
 
     // ///////////////////////////////////
@@ -352,7 +353,7 @@ public class Dungeon {
 
     @Override
     public String toString() {
-        return "Dungeon = { Name=" + name + ", Creator=" + creator + ", ID=" + ID + " }";
+        return "Dungeon = { Name=" + name + ", Creator=" + creator + ", ID=" + ID + ", OPTIONS=" + optionMask + " }";
     }
 
     public void setOptionMask(int optionMask) {
