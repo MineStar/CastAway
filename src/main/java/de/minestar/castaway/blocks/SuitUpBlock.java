@@ -47,7 +47,6 @@ public class SuitUpBlock extends AbstractActionBlock {
         // only act, if we can do something...
         String name = "";
         ItemStack[] contents = player.getInventory().getContents();
-        int count = 0;
         int index = -1;
         for (ItemStack stack : contents) {
             index++;
@@ -55,28 +54,19 @@ public class SuitUpBlock extends AbstractActionBlock {
                 continue;
             }
 
-            if (count > 3) {
-                PlayerUtils.sendInfo(player, "Suit up!");
-                return false;
-            }
-
             name = stack.getType().name().toLowerCase();
             if (name.contains("helmet")) {
                 player.getInventory().setHelmet(stack.clone());
                 player.getInventory().setItem(index, null);
-                count++;
             } else if (name.contains("chestplate")) {
                 player.getInventory().setChestplate(stack.clone());
                 player.getInventory().setItem(index, null);
-                count++;
             } else if (name.contains("leggings")) {
                 player.getInventory().setLeggings(stack.clone());
                 player.getInventory().setItem(index, null);
-                count++;
             } else if (name.contains("boots")) {
                 player.getInventory().setBoots(stack.clone());
                 player.getInventory().setItem(index, null);
-                count++;
             }
         }
 
