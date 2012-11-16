@@ -81,6 +81,7 @@ public class PlayerData {
             player.getInventory().setChestplate(null);
             player.getInventory().setHelmet(null);
             player.getInventory().setLeggings(null);
+            player.updateInventory();
         }
     }
 
