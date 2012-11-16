@@ -18,6 +18,8 @@
 
 package de.minestar.castaway.blocks;
 
+import net.minecraft.server.Material;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -56,17 +58,25 @@ public class SuitUpBlock extends AbstractActionBlock {
 
             name = stack.getType().name().toLowerCase();
             if (name.contains("helmet")) {
-                player.getInventory().setHelmet(stack.clone());
-                player.getInventory().setItem(index, null);
+                if (player.getInventory().getHelmet() == null || player.getInventory().getHelmet().getType().equals(Material.AIR)) {
+                    player.getInventory().setHelmet(stack.clone());
+                    player.getInventory().setItem(index, null);
+                }
             } else if (name.contains("chestplate")) {
-                player.getInventory().setChestplate(stack.clone());
-                player.getInventory().setItem(index, null);
+                if (player.getInventory().getChestplate() == null || player.getInventory().getChestplate().getType().equals(Material.AIR)) {
+                    player.getInventory().setChestplate(stack.clone());
+                    player.getInventory().setItem(index, null);
+                }
             } else if (name.contains("leggings")) {
-                player.getInventory().setLeggings(stack.clone());
-                player.getInventory().setItem(index, null);
+                if (player.getInventory().getLeggings() == null || player.getInventory().getLeggings().getType().equals(Material.AIR)) {
+                    player.getInventory().setLeggings(stack.clone());
+                    player.getInventory().setItem(index, null);
+                }
             } else if (name.contains("boots")) {
-                player.getInventory().setBoots(stack.clone());
-                player.getInventory().setItem(index, null);
+                if (player.getInventory().getBoots() == null || player.getInventory().getBoots().getType().equals(Material.AIR)) {
+                    player.getInventory().setBoots(stack.clone());
+                    player.getInventory().setItem(index, null);
+                }
             }
         }
 
