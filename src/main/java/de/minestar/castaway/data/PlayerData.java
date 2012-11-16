@@ -46,9 +46,10 @@ public class PlayerData {
 
         this.dungeon = dungeon;
         this.inDungeon = true;
-        this.updateBukkitPlayer();
         this.respawnLocation = null;
+        this.clearInvOnDeath = false;
         this.startTime = System.currentTimeMillis();
+        this.updateBukkitPlayer();
     }
 
     public void quitDungeon() {
@@ -68,17 +69,18 @@ public class PlayerData {
     private void updateBukkitPlayer() {
         Player player = Bukkit.getPlayerExact(this.playerName);
         if (player != null) {
+            if (this.inDungeon) {
+                player.setGameMode(GameMode.ADVENTURE);
+            } else {
+                player.setGameMode(GameMode.SURVIVAL);
+            }
+
             player.setAllowFlight(false);
             player.getInventory().clear();
             player.getInventory().setBoots(null);
             player.getInventory().setChestplate(null);
             player.getInventory().setHelmet(null);
             player.getInventory().setLeggings(null);
-            if (this.inDungeon) {
-                player.setGameMode(GameMode.ADVENTURE);
-            } else {
-                player.setGameMode(GameMode.SURVIVAL);
-            }
         }
     }
 
