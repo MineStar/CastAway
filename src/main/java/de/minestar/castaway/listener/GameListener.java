@@ -257,10 +257,19 @@ public class GameListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon().hasOption(DungeonOption.AUTO_REGAIN_HEALTH)) {
-            if (blockedRegainReasons.contains(event.getRegainReason())) {
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon()) {
+            Dungeon dungeon = CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon();
+
+            if (dungeon.hasOption(DungeonOption.BLOCK_AUTO_REGAIN_HEALTH) && !event.getRegainReason().equals(RegainReason.MAGIC_REGEN) && !event.getRegainReason().equals(RegainReason.MAGIC)) {
                 event.setCancelled(true);
                 return;
+            }
+
+            if (!CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon().hasOption(DungeonOption.ENABLE_AUTO_REGAIN_HEALTH)) {
+                if (blockedRegainReasons.contains(event.getRegainReason())) {
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
     }
