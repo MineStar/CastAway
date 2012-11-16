@@ -260,7 +260,7 @@ public class GameListener implements Listener {
         if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon()) {
             Dungeon dungeon = CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon();
 
-            if (dungeon.hasOption(DungeonOption.BLOCK_AUTO_REGAIN_HEALTH) && !event.getRegainReason().equals(RegainReason.MAGIC_REGEN) && !event.getRegainReason().equals(RegainReason.MAGIC)) {
+            if (dungeon.hasOption(DungeonOption.BLOCK_AUTO_REGAIN_HEALTH) && event.getRegainReason().equals(RegainReason.SATIATED)) {
                 event.setCancelled(true);
                 return;
             }
