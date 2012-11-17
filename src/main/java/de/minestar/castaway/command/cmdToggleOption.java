@@ -49,9 +49,15 @@ public class cmdToggleOption extends AbstractCommand {
 
         // NAME WORKS
         if (option == null) {
-            PlayerUtils.sendError(player, pluginName, "Unbekannte Option!");
+            if (!args[1].equalsIgnoreCase("list")) {
+                PlayerUtils.sendError(player, pluginName, "Unbekannte Option!");
+            }
             for (DungeonOption curOption : DungeonOption.values()) {
-                PlayerUtils.sendInfo(player, curOption.getCommand());
+                if (dungeon.hasOption(curOption)) {
+                    PlayerUtils.sendInfo(player, ChatColor.GREEN + curOption.getCommand());
+                } else {
+                    PlayerUtils.sendInfo(player, ChatColor.RED + curOption.getCommand());
+                }
             }
             return;
         }

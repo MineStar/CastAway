@@ -53,8 +53,9 @@ public class RegisterListener implements Listener {
         if (checkBlock == null) {
             CastAwayCore.gameManager.registerSingleBlock(actionBlock);
             CastAwayCore.playerManager.removeRegisterMode(player.getName());
-            PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde registiert.");
+            PlayerUtils.sendSuccess(player, CastAwayCore.NAME, "Der Block wurde registriert.");
         } else {
+            CastAwayCore.playerManager.removeRegisterMode(player.getName());
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Dieser Block ist bereits ein ActionBlock.");
         }
     }
@@ -77,6 +78,7 @@ public class RegisterListener implements Listener {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Dieser Block ist kein ActionBlock.");
         }
     }
+
     private void handleEditHallOfFame(Block block, Player player, RegisterSelection selection, boolean isLeftClick) {
         if (block.getTypeId() != Material.WALL_SIGN.getId()) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst auf ein Schild klicken!");
@@ -109,6 +111,7 @@ public class RegisterListener implements Listener {
                     PlayerUtils.sendError(player, CastAwayCore.NAME, "Schild konnte nicht registriert werden!");
                 }
             } else {
+                CastAwayCore.playerManager.removeRegisterMode(player.getName());
                 PlayerUtils.sendError(player, CastAwayCore.NAME, "Dieses Schild ist schon registriert! ( Platz: " + selection.getDungeon().getPlaceForSign(tempSign) + " )");
             }
         } else {
@@ -124,6 +127,7 @@ public class RegisterListener implements Listener {
                     PlayerUtils.sendError(player, CastAwayCore.NAME, "Schild konnte nicht entfernt werden!");
                 }
             } else {
+                CastAwayCore.playerManager.removeRegisterMode(player.getName());
                 PlayerUtils.sendError(player, CastAwayCore.NAME, "Dieses Schild ist nicht registriert!");
             }
         }
