@@ -86,6 +86,7 @@ public class SuitUpBlock extends AbstractActionBlock {
         String name = "";
         ItemStack[] contents = player.getInventory().getContents();
         int index = -1;
+        int changed = 0;
         for (ItemStack stack : contents) {
             index++;
             if (stack == null) {
@@ -97,44 +98,52 @@ public class SuitUpBlock extends AbstractActionBlock {
                 if (player.getInventory().getHelmet() == null || player.getInventory().getHelmet().getType().equals(Material.AIR)) {
                     player.getInventory().setHelmet(stack.clone());
                     player.getInventory().setItem(index, null);
+                    changed++;
                 } else {
                     if (helmetMap.get(stack.getTypeId()) > helmetMap.get(player.getInventory().getHelmet().getTypeId())) {
                         ItemStack otherStack = player.getInventory().getHelmet().clone();
                         player.getInventory().setHelmet(stack.clone());
                         player.getInventory().setItem(index, otherStack);
+                        changed++;
                     }
                 }
             } else if (name.contains("chestplate")) {
                 if (player.getInventory().getChestplate() == null || player.getInventory().getChestplate().getType().equals(Material.AIR)) {
                     player.getInventory().setChestplate(stack.clone());
                     player.getInventory().setItem(index, null);
+                    changed++;
                 } else {
                     if (chestplateMap.get(stack.getTypeId()) > chestplateMap.get(player.getInventory().getChestplate().getTypeId())) {
                         ItemStack otherStack = player.getInventory().getChestplate().clone();
                         player.getInventory().setChestplate(stack.clone());
                         player.getInventory().setItem(index, otherStack);
+                        changed++;
                     }
                 }
             } else if (name.contains("leggings")) {
                 if (player.getInventory().getLeggings() == null || player.getInventory().getLeggings().getType().equals(Material.AIR)) {
                     player.getInventory().setLeggings(stack.clone());
                     player.getInventory().setItem(index, null);
+                    changed++;
                 } else {
                     if (leggingsMap.get(stack.getTypeId()) > leggingsMap.get(player.getInventory().getLeggings().getTypeId())) {
                         ItemStack otherStack = player.getInventory().getLeggings().clone();
                         player.getInventory().setLeggings(stack.clone());
                         player.getInventory().setItem(index, otherStack);
+                        changed++;
                     }
                 }
             } else if (name.contains("boots")) {
                 if (player.getInventory().getBoots() == null || player.getInventory().getBoots().getType().equals(Material.AIR)) {
                     player.getInventory().setBoots(stack.clone());
                     player.getInventory().setItem(index, null);
+                    changed++;
                 } else {
                     if (bootsMap.get(stack.getTypeId()) > bootsMap.get(player.getInventory().getBoots().getTypeId())) {
                         ItemStack otherStack = player.getInventory().getBoots().clone();
                         player.getInventory().setBoots(stack.clone());
                         player.getInventory().setItem(index, otherStack);
+                        changed++;
                     }
                 }
             }
@@ -142,7 +151,9 @@ public class SuitUpBlock extends AbstractActionBlock {
 
         player.updateInventory();
 
-        PlayerUtils.sendInfo(player, "Suit up!");
+        if (changed > 0) {
+            PlayerUtils.sendInfo(player, "Suit up!");
+        }
         return false;
     }
 }
