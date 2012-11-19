@@ -69,6 +69,7 @@ public class SuitUpBlock extends AbstractActionBlock {
 
     public SuitUpBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon, ActionBlockType.SUIT_UP);
+        this.setExecuteIfNotInDungeon();
         this.setHandlePhysical();
         this.setHandleLeftClick();
         this.setHandleRightClick();

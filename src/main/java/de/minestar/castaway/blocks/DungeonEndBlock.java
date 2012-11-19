@@ -43,7 +43,6 @@ public class DungeonEndBlock extends AbstractActionBlock {
             this.dungeon.playerFinished(data);
             return false;
         }
-
         PlayerUtils.sendInfo(player, "Du bist momentan nicht in einem Dungeon.");
         return false;
     }

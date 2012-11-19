@@ -32,6 +32,7 @@ public class SetRespawnPositionBlock extends AbstractActionBlock {
 
     public SetRespawnPositionBlock(BlockVector vector, Dungeon dungeon) {
         super(vector, dungeon, ActionBlockType.SET_RESPAWN_POS);
+        this.setExecuteIfNotInDungeon();
         this.setHandlePhysical();
         this.setHandleLeftClick();
         this.setHandleRightClick();
