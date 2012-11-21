@@ -87,7 +87,7 @@ public class GameListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         // cancel event, if in dungeon mode
         this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
-        if (this.playerData.isInDungeon()) {
+        if (this.playerData.isInDungeon() && !this.playerData.getDungeon().hasOption(DungeonOption.ALLOW_BLOCK_PLACE)) {
             event.setCancelled(true);
         }
     }
@@ -96,7 +96,7 @@ public class GameListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         // cancel event, if in dungeon mode
         this.playerData = CastAwayCore.playerManager.getPlayerData(event.getPlayer());
-        if (this.playerData.isInDungeon()) {
+        if (this.playerData.isInDungeon() && !this.playerData.getDungeon().hasOption(DungeonOption.ALLOW_BLOCK_BREAK)) {
             event.setCancelled(true);
         }
     }
@@ -260,7 +260,7 @@ public class GameListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon().hasOption(DungeonOption.HUNGER)) {
+        if (CastAwayCore.playerManager.getPlayerData(player.getName()).isInDungeon() && !CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon().hasOption(DungeonOption.ENABLE_HUNGER)) {
             event.setCancelled(true);
         }
     }
