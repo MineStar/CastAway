@@ -30,6 +30,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -143,6 +144,21 @@ public class GameListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
+        // only players are affected
+        if (event.getTarget().getType() == EntityType.PLAYER) {
+            // get the player
+            Player player = (Player) event.getTarget();
+
+            // get PlayerData
+            this.playerData = CastAwayCore.playerManager.getPlayerData(player);
+
+            // cencel event, if the player is in a dungeon
+            event.setCancelled(this.playerData.isInDungeon());
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityTargetEntity(EntityTargetEvent event) {
         // only players are affected
         if (event.getTarget().getType() == EntityType.PLAYER) {
             // get the player
