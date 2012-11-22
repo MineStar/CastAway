@@ -145,7 +145,7 @@ public class GameListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
         // only players are affected
-        if (event.getTarget().getType() == EntityType.PLAYER) {
+        if (event.getTarget() != null && event.getTarget().getType() == EntityType.PLAYER) {
             // get the player
             Player player = (Player) event.getTarget();
 
@@ -160,7 +160,7 @@ public class GameListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityTargetEntity(EntityTargetEvent event) {
         // only players are affected
-        if (event.getTarget().getType() == EntityType.PLAYER) {
+        if (event.getTarget() != null && event.getTarget().getType() == EntityType.PLAYER) {
             // get the player
             Player player = (Player) event.getTarget();
 
@@ -279,9 +279,7 @@ public class GameListener implements Listener {
             if (dungeon.hasOption(DungeonOption.BLOCK_AUTO_REGAIN_HEALTH) && event.getRegainReason().equals(RegainReason.SATIATED)) {
                 event.setCancelled(true);
                 return;
-            }
-
-            if (!CastAwayCore.playerManager.getPlayerData(player.getName()).getDungeon().hasOption(DungeonOption.ENABLE_AUTO_REGAIN_HEALTH)) {
+            } else if (!dungeon.hasOption(DungeonOption.BLOCK_AUTO_REGAIN_HEALTH)) {
                 if (blockedRegainReasons.contains(event.getRegainReason())) {
                     event.setCancelled(true);
                     return;
