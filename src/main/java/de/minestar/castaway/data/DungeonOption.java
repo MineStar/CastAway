@@ -36,7 +36,9 @@ public enum DungeonOption {
 
     ALLOW_BLOCK_BREAK(128, "ALLOW_BLOCK_BREAK"),
 
-    ALLOW_ONLY_ONE_PLAYER(256, "ALLOW_ONLY_ONE_PLAYER");
+    ALLOW_ONLY_ONE_PLAYER(256, "ALLOW_ONLY_ONE_PLAYER"),
+
+    DISABLE_SAVE_ON_FINISH(512, "DISABLE_SAVE_ON_FINISH");
 
     private final int bit;
     private final String command;

@@ -217,42 +217,49 @@ public class Dungeon {
         // get the player
         Player player = playerData.getPlayer();
 
-        // send info
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-        PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + this.getName() + "' erfolgreich beendet!");
-        PlayerUtils.sendSuccess(player, "Du hast dafür " + formatTime(time) + " benötigt");
-        PlayerUtils.sendSuccess(player, "Schau dir deinen Platz in der Hall of Fame an! /warp HallOfFame");
-        PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-
-        // SAVE STATS & update sign if successfull
-        boolean hasAlreadyFinished = CastAwayCore.databaseManager.isWinner(this, playerData.getPlayerName());
-        if (CastAwayCore.dungeonManager.addWinner(playerData.getDungeon(), playerData.getPlayerName(), time)) {
-            if (!hasAlreadyFinished) {
-                // update sign
-                SingleSign sign = this.getNextFreeSign();
-                if (sign != null) {
-                    String[] lines = new String[4];
-                    // place
-                    lines[0] = "---> " + this.getPlaceForSign(sign) + " <---";
-                    // playername
-                    lines[1] = playerData.getPlayerName();
-                    // date
-                    Date date = new Date();
-                    dateFormatter.applyPattern("dd.MM.yyyy");
-                    lines[2] = dateFormatter.format(date);
-                    // time
-                    dateFormatter.applyPattern("HH:mm:ss");
-                    lines[3] = dateFormatter.format(date);
-                    sign.fillWithInformation(lines);
-                }
-            }
+        if (this.hasOption(DungeonOption.DISABLE_SAVE_ON_FINISH)) {
+            // only show a message
+            PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+            PlayerUtils.sendSuccess(player, "Du hast den Dungeon '" + this.getName() + "' verlassen!");
+            PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
         } else {
-            PlayerUtils.sendError(player, CastAwayCore.NAME, "Aufgrund eines Fehlers konnte deine Zeit nicht gespeichert werden :-(");
-            PlayerUtils.sendInfo(player, "Bitte wende dich an einen Admin.");
-        }
+            // send info
+            PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
+            PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + this.getName() + "' erfolgreich beendet!");
+            PlayerUtils.sendSuccess(player, "Du hast dafür " + formatTime(time) + " benötigt");
+            PlayerUtils.sendSuccess(player, "Schau dir deinen Platz in der Hall of Fame an! /warp HallOfFame");
+            PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
 
-        // HANDLE STATISTIC
-        StatisticHandler.handleStatistic(new FinishDungeonStat(playerData.getPlayerName(), ID));
+            // SAVE STATS & update sign if successfull
+            boolean hasAlreadyFinished = CastAwayCore.databaseManager.isWinner(this, playerData.getPlayerName());
+            if (CastAwayCore.dungeonManager.addWinner(playerData.getDungeon(), playerData.getPlayerName(), time)) {
+                if (!hasAlreadyFinished) {
+                    // update sign
+                    SingleSign sign = this.getNextFreeSign();
+                    if (sign != null) {
+                        String[] lines = new String[4];
+                        // place
+                        lines[0] = "---> " + this.getPlaceForSign(sign) + " <---";
+                        // playername
+                        lines[1] = playerData.getPlayerName();
+                        // date
+                        Date date = new Date();
+                        dateFormatter.applyPattern("dd.MM.yyyy");
+                        lines[2] = dateFormatter.format(date);
+                        // time
+                        dateFormatter.applyPattern("HH:mm:ss");
+                        lines[3] = dateFormatter.format(date);
+                        sign.fillWithInformation(lines);
+                    }
+                }
+            } else {
+                PlayerUtils.sendError(player, CastAwayCore.NAME, "Aufgrund eines Fehlers konnte deine Zeit nicht gespeichert werden :-(");
+                PlayerUtils.sendInfo(player, "Bitte wende dich an einen Admin.");
+            }
+
+            // HANDLE STATISTIC
+            StatisticHandler.handleStatistic(new FinishDungeonStat(playerData.getPlayerName(), ID));
+        }
 
         // update the player & the data
         this.playerQuit(playerData);
