@@ -24,6 +24,7 @@ import de.minestar.castaway.core.CastAwayCore;
 import de.minestar.castaway.data.ActionBlockType;
 import de.minestar.castaway.data.BlockVector;
 import de.minestar.castaway.data.Dungeon;
+import de.minestar.castaway.data.DungeonOption;
 import de.minestar.castaway.data.PlayerData;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -41,8 +42,14 @@ public class DungeonStartBlock extends AbstractActionBlock {
     public boolean execute(Player player, PlayerData data) {
         // player is not in a dungeon => join the dungeon
         if (!data.isInDungeon()) {
-            this.dungeon.playerJoin(data);
-            return false;
+            if (data.getDungeon().hasOption(DungeonOption.ALLOW_ONLY_ONE_PLAYER) && data.getDungeon().getPlayerCount() > 0) {
+                PlayerUtils.sendError(player, CastAwayCore.NAME, "Der Dungeon ist momentan besetzt!");
+                PlayerUtils.sendInfo(player, "Warte bis der Dungeon wieder frei ist...");
+                return true;
+            } else {
+                this.dungeon.playerJoin(data);
+                return false;
+            }
         } else {
             // player is in different dungeon => cancel & send message
             if (data.getDungeon().equals(this.dungeon)) {

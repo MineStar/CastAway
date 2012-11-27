@@ -34,7 +34,9 @@ public enum DungeonOption {
 
     ALLOW_BLOCK_PLACE(64, "ALLOW_BLOCK_PLACE"),
 
-    ALLOW_BLOCK_BREAK(128, "ALLOW_BLOCK_BREAK");
+    ALLOW_BLOCK_BREAK(128, "ALLOW_BLOCK_BREAK"),
+
+    ALLOW_ONLY_ONE_PLAYER(256, "ALLOW_ONLY_ONE_PLAYER");
 
     private final int bit;
     private final String command;

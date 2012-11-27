@@ -351,6 +351,10 @@ public class Dungeon {
         return new HashMap<String, PlayerData>(this.players);
     }
 
+    public int getPlayerCount() {
+        return this.players.size();
+    }
+
     @Override
     public String toString() {
         return "Dungeon = { Name=" + name + ", Creator=" + creator + ", ID=" + ID + ", OPTIONS=" + optionMask + " }";
