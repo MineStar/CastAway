@@ -45,7 +45,15 @@ public class PlayerData {
         this.inDungeon = true;
         this.respawnLocation = null;
         this.startTime = System.currentTimeMillis();
-        this.updateBukkitPlayer();
+        if (!dungeon.hasOption(DungeonOption.KEEP_INVENTORY_ON_ENTER)) {
+            this.updateBukkitPlayer();
+        } else {
+            Player player = Bukkit.getPlayerExact(this.playerName);
+            if (player != null) {
+                player.setAllowFlight(false);
+                player.setGameMode(GameMode.ADVENTURE);
+            }
+        }
     }
 
     public void quitDungeon() {

@@ -20,11 +20,8 @@ package de.minestar.castaway.listener;
 
 import java.lang.reflect.Constructor;
 
-import net.minecraft.server.Packet130UpdateSign;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -103,10 +100,10 @@ public class RegisterListener implements Listener {
 
                     // SEND UPDATE FOR CLIENTS => NEED HELP OF ORIGINAL
                     // MC-SERVERSOFTWARE
-                    CraftPlayer cPlayer = (CraftPlayer) player;
-                    Packet130UpdateSign signPacket = null;
-                    signPacket = new Packet130UpdateSign(block.getX(), block.getY(), block.getZ(), lines);
-                    cPlayer.getHandle().netServerHandler.sendPacket(signPacket);
+//                    CraftPlayer cPlayer = (CraftPlayer) player;
+//                    Packet130UpdateSign signPacket = null;
+//                    signPacket = new Packet130UpdateSign(block.getX(), block.getY(), block.getZ(), lines);
+//                     cPlayer.getHandle().server.getnet.sendPacket(signPacket);
                 } else {
                     PlayerUtils.sendError(player, CastAwayCore.NAME, "Schild konnte nicht registriert werden!");
                 }

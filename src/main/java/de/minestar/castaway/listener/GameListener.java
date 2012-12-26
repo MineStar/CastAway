@@ -356,7 +356,7 @@ public class GameListener implements Listener {
 
             // FIRE
             if (!dungeon.hasOption(DungeonOption.KEEP_DUNGEON_MODE_ON_DEATH)) {
-                this.playerData.quitDungeon();
+                dungeon.playerQuit(playerData);
             }
         }
     }

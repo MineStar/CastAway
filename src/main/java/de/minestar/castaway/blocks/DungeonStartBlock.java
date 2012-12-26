@@ -42,7 +42,7 @@ public class DungeonStartBlock extends AbstractActionBlock {
     public boolean execute(Player player, PlayerData data) {
         // player is not in a dungeon => join the dungeon
         if (!data.isInDungeon()) {
-            if (data.getDungeon().hasOption(DungeonOption.ALLOW_ONLY_ONE_PLAYER) && data.getDungeon().getPlayerCount() > 0) {
+            if (this.dungeon.hasOption(DungeonOption.ALLOW_ONLY_ONE_PLAYER) && this.dungeon.getPlayerCount() > 0) {
                 PlayerUtils.sendError(player, CastAwayCore.NAME, "Der Dungeon ist momentan besetzt!");
                 PlayerUtils.sendInfo(player, "Warte bis der Dungeon wieder frei ist...");
                 return true;

@@ -186,9 +186,11 @@ public class Dungeon {
         Player player = playerData.getPlayer();
 
         // remove active potioneffects
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            PotionEffectType type = effect.getType();
-            player.removePotionEffect(type);
+        if (!this.hasOption(DungeonOption.KEEP_INVENTORY_ON_ENTER)) {
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                PotionEffectType type = effect.getType();
+                player.removePotionEffect(type);
+            }
         }
 
         playerData.joinDungeon(this);
@@ -280,6 +282,10 @@ public class Dungeon {
         // HANDLE STATISTIC
         StatisticHandler.handleStatistic(new DeathInDungeonStat(playerData.getPlayerName(), ID));
 
+        this.removePlayer(playerData);
+    }
+
+    public void removePlayer(PlayerData playerData) {
         this.players.remove(playerData.getPlayerName());
     }
 

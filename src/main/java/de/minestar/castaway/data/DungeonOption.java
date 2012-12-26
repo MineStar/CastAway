@@ -38,7 +38,9 @@ public enum DungeonOption {
 
     ALLOW_ONLY_ONE_PLAYER(256, "ALLOW_ONLY_ONE_PLAYER"),
 
-    DISABLE_SAVE_ON_FINISH(512, "DISABLE_SAVE_ON_FINISH");
+    DISABLE_SAVE_ON_FINISH(512, "DISABLE_SAVE_ON_FINISH"),
+
+    KEEP_INVENTORY_ON_ENTER(1024, "KEEP_INVENTORY_ON_ENTER");
 
     private final int bit;
     private final String command;

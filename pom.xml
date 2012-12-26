@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.minestar</groupId>
 	<artifactId>CastAway</artifactId>
-	<version>1.0</version>
+	<version>1.4.6_1</version>
 	<distributionManagement>
 		<!-- use the following if you're not using a snapshot version. -->
 		<repository>
@@ -22,12 +22,12 @@
 		<dependency>
 			<groupId>de.minestar</groupId>
 			<artifactId>FalseBookCore</artifactId>
-			<version>0.95alpha</version>
+			<version>0.96alpha</version>
 		</dependency>
 		<dependency>
 			<groupId>de.minestar</groupId>
 			<artifactId>MinestarCore</artifactId>
-			<version>1.7</version>
+			<version>1.4.6_1</version>
 		</dependency>
 	</dependencies>
 	<build>
