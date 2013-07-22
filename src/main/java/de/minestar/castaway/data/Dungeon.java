@@ -196,7 +196,7 @@ public class Dungeon {
         playerData.joinDungeon(this);
 
         // regain health
-        player.setHealth(20);
+        player.setHealth(20d);
 
         // regain food
         player.setFoodLevel(20);

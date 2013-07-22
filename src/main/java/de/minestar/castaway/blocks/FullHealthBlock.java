@@ -19,6 +19,7 @@
 package de.minestar.castaway.blocks;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 
 import de.minestar.castaway.core.CastAwayCore;
@@ -47,9 +48,9 @@ public class FullHealthBlock extends AbstractActionBlock {
         }
 
         // only act, if we can do something...
-        if (player.getHealth() < 20) {
+        if (((Damageable) player).getHealth() < 20) {
             // update the players health
-            player.setHealth(20);
+            player.setHealth(20.0);
 
             // send info
             PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
