@@ -55,7 +55,7 @@ public class SingleSign {
 
         // return if the sign already exists
         Block block = location.getBlock();
-        if (block.getTypeId() == Material.WALL_SIGN.getId() && block.getData() == this.subData) {
+        if (block.getType().equals(Material.WALL_SIGN) && block.getData() == this.subData) {
             return true;
         }
 
@@ -101,7 +101,7 @@ public class SingleSign {
 
         // return if the sign already exists
         Block block = location.getBlock();
-        if (block.getTypeId() != Material.WALL_SIGN.getId() || block.getData() != this.subData) {
+        if (!block.getType().equals(Material.WALL_SIGN) || block.getData() != this.subData) {
             return false;
         }
 

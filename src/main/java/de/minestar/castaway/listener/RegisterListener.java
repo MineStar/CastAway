@@ -77,7 +77,7 @@ public class RegisterListener implements Listener {
     }
 
     private void handleEditHallOfFame(Block block, Player player, RegisterSelection selection, boolean isLeftClick) {
-        if (block.getTypeId() != Material.WALL_SIGN.getId()) {
+        if (block.getType().equals(Material.WALL_SIGN)) {
             PlayerUtils.sendError(player, CastAwayCore.NAME, "Du musst auf ein Schild klicken!");
             CastAwayCore.playerManager.removeRegisterMode(player.getName());
             return;
