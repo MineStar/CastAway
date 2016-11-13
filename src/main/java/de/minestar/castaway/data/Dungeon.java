@@ -213,7 +213,6 @@ public class Dungeon {
         this.players.put(playerData.getPlayerName(), playerData);
     }
 
-    @SuppressWarnings("deprecation")
     public void playerFinished(PlayerData playerData) {
         long time = System.currentTimeMillis() - playerData.getStartTime();
         // get the player
@@ -227,8 +226,8 @@ public class Dungeon {
         } else {
             // send info
             PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
-            PlayerUtils.sendSuccess(player, "Herzlich Glückwunsch! Du hast den Dungeon '" + this.getName() + "' erfolgreich beendet!");
-            PlayerUtils.sendSuccess(player, "Du hast dafür " + formatTime(time) + " benötigt");
+            PlayerUtils.sendSuccess(player, "Herzlich Glï¿½ckwunsch! Du hast den Dungeon '" + this.getName() + "' erfolgreich beendet!");
+            PlayerUtils.sendSuccess(player, "Du hast dafï¿½r " + formatTime(time) + " benï¿½tigt");
             PlayerUtils.sendSuccess(player, "Schau dir deinen Platz in der Hall of Fame an! /warp HallOfFame");
             PlayerUtils.sendMessage(player, ChatColor.DARK_AQUA, "------------------------------");
 

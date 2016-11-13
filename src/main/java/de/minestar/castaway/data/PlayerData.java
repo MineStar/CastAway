@@ -67,7 +67,6 @@ public class PlayerData {
         return Bukkit.getPlayerExact(this.playerName);
     }
 
-    @SuppressWarnings("deprecation")
     private void updateBukkitPlayer() {
         Player player = Bukkit.getPlayerExact(this.playerName);
         if (player != null) {
